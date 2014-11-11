@@ -1,0 +1,6 @@
+# vtk DataFile Version 2.0
+TestTestTest
+ASCII
+DATASET STRUCTURED_GRID
+DIMENSIONS 11 11 1
+POINTS 121 float
