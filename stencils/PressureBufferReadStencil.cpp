@@ -5,40 +5,30 @@ PressureBufferFillStencil::PressureBufferFillStencil( const Parameters & paramet
 
   int dim = parameters.geometry.dim;
 
-  leftPressureBuffer = new FLOAT[(localSize[1]) * (localSize[2])];
-  rightPressureBuffer = new FLOAT[(localSize[1]) * (localSize[2])];
-
-  bottomPressureBuffer = new FLOAT[(localSize[0]) * (localSize[2])];
-  topPressureBuffer = new FLOAT[(localSize[0]) * (localSize[2])];
-
-  frontPressureBuffer = new FLOAT[(localSize[0]) * (localSize[1])];
-  backPressureBuffer = new FLOAT[(localSize[0]) * (localSize[1])];
-
 }
-
 
 
 void PressureBufferFillStencil::applyLeftWall ( FlowField & flowField, int i, int j, int k) {
   
-  leftPressureBuffer[k+(localSize[1]*j)] = flowField.getPressure().getScalar(i,j,k);
-
+  flowField.getPressure().getScalar(i,j,k) = leftPressureBuffer[k+(localSize[1]*j)];
+  
 }
 
 void PressureBufferFillStencil::applyRightWall ( FlowField & flowField, int i, int j, int k) {
-  
-  rightPressureBuffer[k+(localSize[1]*j)] = flowField.getPressure().getScalar(i,j,k);
+
+  flowField.getPressure().getScalar(i,j,k) = rightPressureBuffer[k+(localSize[1]*j)];
 
 }
 
 void PressureBufferFillStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k) {
-  
-  bottomPressureBuffer[k+(localSize[0]*i)] = flowField.getPressure().getScalar(i,j,k);
+
+  flowField.getPressure().getScalar(i,j,k) = bottomPressureBuffer[k+(localSize[0]*i)];
 
 }
 
 void PressureBufferFillStencil::applyTopWall ( FlowField & flowField, int i, int j, int k) {
-  
-  topPressureBuffer[k+(localSize[0]*i)] = flowField.getPressure().getScalar(i,j,k);
+
+  flowField.getPressure().getScalar(i,j,k) = topPressureBuffer[k+(localSize[0]*i)];
 
 }
 
@@ -46,10 +36,13 @@ void PressureBufferFillStencil::applyFrontWall ( FlowField & flowField, int i, i
   
   frontPressureBuffer[j+(localSize[0]*i)] = flowField.getPressure().getScalar(i,j,k);
 
+
+  flowField.getPressure().getScalar(i,j,k) = frontPressureBuffer[j+(localSize[0]*i)];
+  
 }
 
 void PressureBufferFillStencil::applyBackWall ( FlowField & flowField, int i, int j, int k) {
-  
-  backPressureBuffer[j+(localSize[0]*i)] = flowField.getPressure().getScalar(i,j,k);
+
+  flowField.getPressure().getScalar(i,j,k) = backPressureBuffer[j+(localSize[0]*i)];
 
 }
