@@ -1,7 +1,7 @@
 #ifndef _PRESSURE_BUFFER_READ_STENCIL_H_
 #define _PRESSURE_BUFFER_READ_STENCIL_H_
 
-#include "../Stenci.h"
+#include "../Stencil.h"
 #include "../Parameters.h"
 #include "../FlowField.h"
 
@@ -15,7 +15,7 @@ class PressureBufferReadStencil : public BoundaryStencil<FlowField> {
   
   FLOAT* leftPressureReadBuffer;
   FLOAT* rightPressureReadBuffer;
-  FLOAT* ottomPressureReadBuffer;
+  FLOAT* bottomPressureReadBuffer;
   FLOAT* topPressureReadBuffer;
   FLOAT* frontPressureReadBuffer;
   FLOAT* backPressureReadBuffer;
