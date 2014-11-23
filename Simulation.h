@@ -15,6 +15,9 @@
 #include "stencils/NeumannBoundaryStencils.h"
 #include "stencils/BFInputStencils.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
+#include "parallelManagers/PetscParallelManager.h"
+#include "stencils/PressureBufferFillStencil.h"
+#include "stencils/PressureBufferReadStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -39,6 +42,15 @@ class Simulation {
     GlobalBoundaryFactory _globalBoundaryFactory;
     GlobalBoundaryIterator<FlowField> _wallVelocityIterator;
     GlobalBoundaryIterator<FlowField> _wallFGHIterator;
+
+    // Pressure and velocity communication
+    PressureBufferFillStencil _pressureBufferFillStencil;
+    PressureBufferReadStencil _pressureBufferReadStencil;
+    //TODO: VelocityBufferFillStencil _velocityBufferFillStencil;
+    //TODO: VelocityBufferReadStencil _velocityBufferReadStencil;
+    ParallelBoundaryIterator<FlowField> _parallelPressureFillBoundaryIterator;
+    ParallelBoundaryIterator<FlowField> _parallelPressureReadBoundaryIterator;
+    PetscParallelManager<FlowField> _petscParallelManager;
 
     FGHStencil _fghStencil;
     FieldIterator<FlowField> _fghIterator;
@@ -65,6 +77,11 @@ class Simulation {
        _globalBoundaryFactory(parameters),
        _wallVelocityIterator(_globalBoundaryFactory.getGlobalBoundaryVelocityIterator(_flowField)),
        _wallFGHIterator(_globalBoundaryFactory.getGlobalBoundaryFGHIterator(_flowField)),
+		_pressureBufferFillStencil(parameters),
+		_pressureBufferReadStencil(parameters),
+		_parallelPressureFillBoundaryIterator(_flowField, parameters, _pressureBufferFillStencil),
+		_parallelPressureReadBoundaryIterator(_flowField, parameters, _pressureBufferReadStencil),
+		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator),
        _fghStencil(parameters),
        _fghIterator(_flowField,parameters,_fghStencil),
        _rhsStencil(parameters),
@@ -127,6 +144,7 @@ class Simulation {
         // solve for pressure 
         _solver.solve();
         // TODO WS2: communicate pressure values
+        _petscParallelManager.communicatePressure();
         // compute velocity
         _velocityIterator.iterate();
         // TODO WS2: communicate velocity values

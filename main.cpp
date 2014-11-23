@@ -4,6 +4,7 @@
 #include "Configuration.h"
 #include "Simulation.h"
 #include "parallelManagers/PetscParallelConfiguration.h"
+#include "parallelManagers/PetscParallelManager.h"
 #include "MeshsizeFactory.h"
 #include <iomanip>
 
