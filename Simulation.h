@@ -18,6 +18,8 @@
 #include "parallelManagers/PetscParallelManager.h"
 #include "stencils/PressureBufferFillStencil.h"
 #include "stencils/PressureBufferReadStencil.h"
+#include "stencils/VelocityBufferFillStencil.h"
+#include "stencils/VelocityBufferReadStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -46,10 +48,12 @@ class Simulation {
     // Pressure and velocity communication
     PressureBufferFillStencil _pressureBufferFillStencil;
     PressureBufferReadStencil _pressureBufferReadStencil;
-    //TODO: VelocityBufferFillStencil _velocityBufferFillStencil;
-    //TODO: VelocityBufferReadStencil _velocityBufferReadStencil;
+    VelocityBufferFillStencil _velocityBufferFillStencil;
+    VelocityBufferReadStencil _velocityBufferReadStencil;
     ParallelBoundaryIterator<FlowField> _parallelPressureFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelPressureReadBoundaryIterator;
+    ParallelBoundaryIterator<FlowField> _parallelVelocityFillBoundaryIterator;
+    ParallelBoundaryIterator<FlowField> _parallelVelocityReadBoundaryIterator;
     PetscParallelManager<FlowField> _petscParallelManager;
 
     FGHStencil _fghStencil;
@@ -79,9 +83,13 @@ class Simulation {
        _wallFGHIterator(_globalBoundaryFactory.getGlobalBoundaryFGHIterator(_flowField)),
 		_pressureBufferFillStencil(parameters),
 		_pressureBufferReadStencil(parameters),
+		_velocityBufferFillStencil(parameters),
+		_velocityBufferReadStencil(parameters),
 		_parallelPressureFillBoundaryIterator(_flowField, parameters, _pressureBufferFillStencil),
 		_parallelPressureReadBoundaryIterator(_flowField, parameters, _pressureBufferReadStencil),
-		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator),
+		_parallelVelocityFillBoundaryIterator(_flowField, parameters, _velocityBufferFillStencil),
+		_parallelVelocityReadBoundaryIterator(_flowField, parameters, _velocityBufferReadStencil),
+		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator, _velocityBufferFillStencil, _velocityBufferReadStencil, _parallelVelocityFillBoundaryIterator, _parallelVelocityReadBoundaryIterator),
        _fghStencil(parameters),
        _fghIterator(_flowField,parameters,_fghStencil),
        _rhsStencil(parameters),
@@ -148,6 +156,7 @@ class Simulation {
         // compute velocity
         _velocityIterator.iterate();
         // TODO WS2: communicate velocity values
+        _petscParallelManager.communicateVelocity();
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
     }

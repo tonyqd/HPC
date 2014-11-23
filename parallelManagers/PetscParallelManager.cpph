@@ -1,11 +1,16 @@
 
 template <class FlowField> PetscParallelManager<FlowField>::PetscParallelManager
-(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator):
+(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator,
+		PressureBufferFillStencil & velocityBufferFillStencil, PressureBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator):
 _parameters(parameters),
 _pressureBufferFillStencil(pressureBufferFillStencil),
 _pressureBufferReadStencil(pressureBufferReadStencil),
 _parallelPressureFillBoundaryIterator(parallelPressureFillBoundaryIterator),
-_parallelPressureReadBoundaryIterator(parallelPressureReadBoundaryIterator){
+_parallelPressureReadBoundaryIterator(parallelPressureReadBoundaryIterator),
+_velocityBufferFillStencil(velocityBufferFillStencil),
+_velocityBufferReadStencil(velocityBufferReadStencil),
+_parallelVelocityFillBoundaryIterator(parallelVelocityFillBoundaryIterator),
+_parallelVelocityReadBoundaryIterator(parallelVelocityReadBoundaryIterator) {
 
 }
 
@@ -40,5 +45,11 @@ void PetscParallelManager<FlowField>::communicatePressure() {
 	MPI_Recv(_pressureBufferReadStencil.frontPressureReadBuffer, (_pressureBufferFillStencil.localSize[0])*(_pressureBufferFillStencil.localSize[1]), MY_MPI_FLOAT, _parameters.parallel.backNb, 6, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 
 	_parallelPressureReadBoundaryIterator.iterate();
+
+}
+
+template <class FlowField>
+void PetscParallelManager<FlowField>::communicateVelocities() {
+	
 
 }

@@ -1,9 +1,10 @@
 #ifndef _PETSC_PARALLEL_MANAGER_H_
 #define _PETSC_PARALLEL_MANAGER_H_
 
-//#include "PetscParallelManager.h"
 #include "../stencils/PressureBufferFillStencil.h"
 #include "../stencils/PressureBufferReadStencil.h"
+#include "../stencils/VelocityBufferFillStencil.h"
+#include "../stencils/VelocityBufferReadStencil.h"
 #include "../Iterators.h"
 #include "../Parameters.h"
 #include "../Definitions.h"
@@ -20,25 +21,28 @@ class PetscParallelManager {
         Parameters & _parameters;   //! Reference to the parameters
 
         PressureBufferFillStencil & _pressureBufferFillStencil;
-		PressureBufferReadStencil & _pressureBufferReadStencil;
-		//TODO: VelocityBufferFillStencil & _velocityBufferFillStencil;
-		//TODO: VelocityBufferReadStencil & _velocityBufferReadStencil;
-		ParallelBoundaryIterator<FlowField> & _parallelPressureFillBoundaryIterator;
-		ParallelBoundaryIterator<FlowField> & _parallelPressureReadBoundaryIterator;
+	  PressureBufferReadStencil & _pressureBufferReadStencil;
+	  VelocityBufferFillStencil & _velocityBufferFillStencil;
+	  VelocityBufferReadStencil & _velocityBufferReadStencil;
+	  ParallelBoundaryIterator<FlowField> & _parallelPressureFillBoundaryIterator;
+	  ParallelBoundaryIterator<FlowField> & _parallelPressureReadBoundaryIterator;
+	  ParallelBoundaryIterator<FlowField> & _parallelVelocityFillBoundaryIterator;
+	  ParallelBoundaryIterator<FlowField> & _parallelVelocityReadBoundaryIterator;
 
     public:
 
         /** Constructor
          * @param parameters Reference to the parameters
          */
-        PetscParallelManager(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator);
+        PetscParallelManager(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator,
+        		PressureBufferFillStencil & velocityBufferFillStencil, PressureBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator);
 
         /** Destructor */
         //~PetscParallelManager();
 
         void communicatePressure();
 
-        //TODO: void communicateVelocities();
+        void communicateVelocities();
 
 };
 
