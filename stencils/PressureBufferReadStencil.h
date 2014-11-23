@@ -1,5 +1,5 @@
-#ifndef _PRESSURE_BUFFER_FILL_STENCIL_H_
-#define _PRESSURE_BUFFER_FILL_STENCIL_H_
+#ifndef _PRESSURE_BUFFER_READ_STENCIL_H_
+#define _PRESSURE_BUFFER_READ_STENCIL_H_
 
 #include "../Stenci.h"
 #include "../Parameters.h"
@@ -7,12 +7,19 @@
 
 /** Stencil to read the pressure values and store it into a single 1-d array.
  */
-class PressureBufferFillStencil : public BoundaryStencil<FlowField> {
+class PressureBufferReadStencil : public BoundaryStencil<FlowField> {
 
  public:
 
   const int *localSize;
-
+  
+  FLOAT* leftPressureReadBuffer;
+  FLOAT* rightPressureReadBuffer;
+  FLOAT* ottomPressureReadBuffer;
+  FLOAT* topPressureReadBuffer;
+  FLOAT* frontPressureReadBuffer;
+  FLOAT* backPressureReadBuffer;
+  
 
   PressureBufferReadStencil(const Parameters & parameters);
 
