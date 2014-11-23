@@ -13,12 +13,12 @@ class PressureBufferFillStencil : public BoundaryStencil<FlowField> {
 
   const int *localSize;
 
-  FLOAT* leftPressureBuffer;
-  FLOAT* rightPressureBuffer;
-  FLOAT* ottomPressureBuffer;
-  FLOAT* topPressureBuffer;
-  FLOAT* frontPressureBuffer;
-  FLOAT* backPressureBuffer;
+  FLOAT* leftPressureFillBuffer;
+  FLOAT* rightPressureFillBuffer;
+  FLOAT* ottomPressureFillBuffer;
+  FLOAT* topPressureFillBuffer;
+  FLOAT* frontPressureFillBuffer;
+  FLOAT* backPressureFillBuffer;
 
 
   PressureBufferFillStencil(const Parameters & parameters);
