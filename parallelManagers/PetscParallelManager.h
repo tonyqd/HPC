@@ -1,7 +1,7 @@
 #ifndef _PETSC_PARALLEL_MANAGER_H_
 #define _PETSC_PARALLEL_MANAGER_H_
 
-#include "PetscParallelManager.h"
+//#include "PetscParallelManager.h"
 #include "../stencils/PressureBufferFillStencil.h"
 #include "../stencils/PressureBufferReadStencil.h"
 #include "../Iterators.h"
@@ -42,16 +42,7 @@ class PetscParallelManager {
 
 };
 
-template <class FlowField> PetscParallelManager<FlowField>::PetscParallelManager
-(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator):
-_parameters(parameters),
-_pressureBufferFillStencil(pressureBufferFillStencil),
-_pressureBufferReadStencil(pressureBufferReadStencil),
-_parallelPressureFillBoundaryIterator(parallelPressureFillBoundaryIterator),
-_parallelPressureReadBoundaryIterator(parallelPressureReadBoundaryIterator){
 
-}
-
-
+#include "PetscParallelManager.cpph"
 
 #endif

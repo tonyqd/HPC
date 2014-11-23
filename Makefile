@@ -31,7 +31,7 @@ GlobalBoundaryFactory.o\
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o\
 stencils/PressureBufferFillStencil.o \
 stencils/PressureBufferReadStencil.o \
-parallelManagers/PetscParallelManager.o \
+#parallelManagers/PetscParallelManager.o \
 
 all: ns
 
