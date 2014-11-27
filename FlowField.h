@@ -21,6 +21,8 @@ class FlowField {
         const int _cellsZ;
 
         ScalarField _pressure; //! Scalar field representing the pressure
+        ScalarField _viscosity;//! Scalar field representing the eddy viscosity
+        ScalarField _distance; //! Scalar field representing the distance to the nearest wall
         VectorField _velocity; //! Multicomponent field representing velocity
         IntScalarField _flags; //! Integer field for the flags
 
@@ -86,6 +88,16 @@ class FlowField {
          * @return Reference to pressure field
          */
         ScalarField & getPressure ();
+	
+	/** Get viscosity field
+	 * @return Reference to viscosity field
+	 */
+	ScalarField & getViscosity ();
+	
+	/** Get distance field
+	 * @return Reference to distance field
+	 */
+	ScalarField & getDistance ();
 
         /** Get velocity field
          * @return Reference to velocity field

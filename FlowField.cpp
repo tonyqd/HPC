@@ -7,6 +7,8 @@ FlowField::FlowField ( int Nx, int Ny ) :
     // Pressure field doesn't need to have an extra layer, but this allows to address the same
     // positions with the same iterator for both pressures and velocities.
     _pressure ( ScalarField ( Nx + 3, Ny + 3 ) ),
+    _viscosity ( ScalarField ( Nx + 3, Ny + 3 ) ),
+    _distance ( ScalarField ( Nx + 3, Ny + 3 ) ),
     _velocity ( VectorField ( Nx + 3, Ny + 3 ) ), _flags ( IntScalarField ( Nx + 3, Ny + 3 ) ),
     _FGH ( VectorField ( Nx + 3, Ny + 3 ) ), _RHS ( ScalarField (Nx + 3, Ny + 3) ) {
 
@@ -19,6 +21,8 @@ FlowField::FlowField ( int Nx, int Ny, int Nz ) :
     _size_x ( Nx ), _size_y ( Ny ), _size_z ( Nz ),
     _cellsX (Nx+3), _cellsY(Ny+3), _cellsZ(Nz+3),
     _pressure ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
+    _viscosity ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
+    _distance ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
     _velocity  ( VectorField ( Nx + 3, Ny + 3, Nz + 3 ) ),
     _flags  ( IntScalarField ( Nx + 3, Ny + 3, Nz +3 ) ),
     _FGH ( VectorField ( Nx + 3, Ny + 3, Nz + 3 ) ),
@@ -41,6 +45,10 @@ FlowField::FlowField (const Parameters & parameters):
     _cellsZ(_size_z+3),
     // Probably far from the best way to write this
     _pressure(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
+                      ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    _viscosity(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
+                      ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    _distance(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
                       ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
     _velocity(parameters.geometry.dim==2?VectorField(_size_x + 3, _size_y + 3):
                       VectorField(_size_x + 3, _size_y + 3, _size_z + 3)),
@@ -85,6 +93,13 @@ ScalarField & FlowField::getPressure () {
     return _pressure;
 }
 
+ScalarField & FlowField::getViscosity () {
+    return _viscosity;
+}
+
+ScalarField & FlowField::getDistance () {
+    return _distance;
+}
 
 VectorField & FlowField::getVelocity () {
     return _velocity;
