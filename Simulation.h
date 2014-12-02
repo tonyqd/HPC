@@ -156,7 +156,7 @@ class Simulation {
         // compute velocity
         _velocityIterator.iterate();
         // TODO WS2: communicate velocity values
-        _petscParallelManager.communicateVelocity();
+        _petscParallelManager.communicateVelocities();
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
     }
