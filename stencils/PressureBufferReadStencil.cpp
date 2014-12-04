@@ -21,42 +21,42 @@ void PressureBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, in
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset; 
    */  
-  flowField.getPressure().getScalar(i-1,j,k) = leftPressureReadBuffer[(k-2)+(localSize[1]*(j-2))]; 
+  flowField.getPressure().getScalar(i-1,j,k) = leftPressureReadBuffer[(k-2)+(localSize[2]*(j-2))];
 }
 
 void PressureBufferReadStencil::applyRightWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _flowField.getCellsX()+_highOffset-1 ; j = _lowOffset ; k = _lowOffset;
    */
-  flowField.getPressure().getScalar(i+1,j,k) = rightPressureReadBuffer[(k-2)+(localSize[1]*(j-2))];
+  flowField.getPressure().getScalar(i+1,j,k) = rightPressureReadBuffer[(k-2)+(localSize[2]*(j-2))];
 }
 
 void PressureBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
-  flowField.getPressure().getScalar(i,j-1,k) = bottomPressureReadBuffer[(k-2)+(localSize[0]*(i-2))];
+  flowField.getPressure().getScalar(i,j-1,k) = bottomPressureReadBuffer[(k-2)+(localSize[2]*(i-2))];
 }
 
 void PressureBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1 ; k = _lowOffset;
    */ 
-  flowField.getPressure().getScalar(i,j+1,k) = topPressureReadBuffer[(k-2)+(localSize[0]*(i-2))];
+  flowField.getPressure().getScalar(i,j+1,k) = topPressureReadBuffer[(k-2)+(localSize[2]*(i-2))];
 }
 
 void PressureBufferReadStencil::applyFrontWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
-  flowField.getPressure().getScalar(i,j,k-1) = frontPressureReadBuffer[(j-2)+(localSize[0]*(i-2))];
+  flowField.getPressure().getScalar(i,j,k-1) = frontPressureReadBuffer[(j-2)+(localSize[1]*(i-2))];
 }
 
 void PressureBufferReadStencil::applyBackWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 2; _highOffset = -1;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1 ;
    */  
-  flowField.getPressure().getScalar(i,j,k+1) = backPressureReadBuffer[(j-2)+(localSize[0]*(i-2))];
+  flowField.getPressure().getScalar(i,j,k+1) = backPressureReadBuffer[(j-2)+(localSize[1]*(i-2))];
 }
 
 /*2D
