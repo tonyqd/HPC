@@ -153,6 +153,15 @@ class Simulation {
         _solver.solve();
         // TODO WS2: communicate pressure values
         _petscParallelManager.communicatePressure();
+ int i=0; int j = 0;int k =0;
+        for (i =0; i < _parameters.parallel.localSize[0] +3; i++ ){
+        	for(i =0; i < _parameters.parallel.localSize[0] +3; i++){
+        		for(i =0; i < _parameters.parallel.localSize[0]+3; i++){
+        			printf("processor %d i %d j %d k %d = %f \n", _parameters.parallel.rank ,i,j,k,_flowField.getPressure().getScalar(i,j,k));
+        		}
+        	}
+        }
+
         // compute velocity
         _velocityIterator.iterate();
         // TODO WS2: communicate velocity values
