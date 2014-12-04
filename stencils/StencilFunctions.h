@@ -724,7 +724,7 @@ inline FLOAT nuiMhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis )
 
 // New components for the diffusive Part of the Navier-Stokes-Equation
 // d/dx(nu*du/dx)
-inline FLOAT comp11 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis ) {
+inline FLOAT comp11 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis, const Parameters & parameters ) {
     const int index_M1    = mapd(-1,0,0,0);
     const int index_0     = mapd(0,0,0,0);
     const int index_P1    = mapd(1,0,0,0);
@@ -737,7 +737,7 @@ inline FLOAT comp11 ( const FLOAT * const lv, const FLOAT * const lm, const FLOA
 }
 
 // d/dy(nu*dv/dy)
-inline FLOAT comp22 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis ) {
+inline FLOAT comp22 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis, const Parameters & parameters ) {
     const int index_M1    = mapd(0,-1,0,1);
     const int index_0     = mapd(0, 0,0,1);
     const int index_P1    = mapd(0, 1,0,1);
@@ -750,7 +750,7 @@ inline FLOAT comp22 ( const FLOAT * const lv, const FLOAT * const lm, const FLOA
 }
 
 // d/dy(nu*dw/dz)
-inline FLOAT comp33 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis ) {
+inline FLOAT comp33 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis, const Parameters & parameters ) {
     const int index_M1    = mapd(0,0,-1,2);
     const int index_0     = mapd(0,0, 0,2);
     const int index_P1    = mapd(0,0, 1,2);
@@ -773,12 +773,12 @@ inline FLOAT comp12 ( const FLOAT * const lv, const FLOAT * const lm, const FLOA
     const FLOAT u00   = lv[mapd(0, 0,0,0)];
     const FLOAT u01   = lv[mapd(0, 1,0,0)];
     
-    const FLOAT dy01  = lm[mapd(0, 1,0,1);
-    const FLOAT dy00  = lm[mapd(0, 0,0,1);
-    const FLOAT dy0M1 = lm[mapd(0,-1,0,1);
+    const FLOAT dy01  = lm[mapd(0, 1,0,1)];
+    const FLOAT dy00  = lm[mapd(0, 0,0,1)];
+    const FLOAT dy0M1 = lm[mapd(0,-1,0,1)];
     
-    const FLOAT dx00  = lm[mapd(0, 0,0,0);
-    const FLOAT dx10  = lm[mapd(1, 0,0,0);
+    const FLOAT dx00  = lm[mapd(0, 0,0,0)];
+    const FLOAT dx10  = lm[mapd(1, 0,0,0)];
     
     const FLOAT dy1 = 0.5*(dy01+dy00);
     const FLOAT dy0 = 0.5*(dy00+dy0M1);
@@ -799,12 +799,12 @@ inline FLOAT comp13 ( const FLOAT * const lv, const FLOAT * const lm, const FLOA
     const FLOAT u00   = lv[mapd(0,0, 0,0)];
     const FLOAT u01   = lv[mapd(0,0, 1,0)];
     
-    const FLOAT dz01  = lm[mapd(0,0, 1,2);
-    const FLOAT dz00  = lm[mapd(0,0, 0,2);
-    const FLOAT dz0M1 = lm[mapd(0,0,-1,2);
+    const FLOAT dz01  = lm[mapd(0,0, 1,2)];
+    const FLOAT dz00  = lm[mapd(0,0, 0,2)];
+    const FLOAT dz0M1 = lm[mapd(0,0,-1,2)];
     
-    const FLOAT dx00  = lm[mapd(0, 0,0,0);
-    const FLOAT dx10  = lm[mapd(1, 0,0,0);
+    const FLOAT dx00  = lm[mapd(0, 0,0,0)];
+    const FLOAT dx10  = lm[mapd(1, 0,0,0)];
     
     const FLOAT dz1 = 0.5*(dz01+dz00);
     const FLOAT dz0 = 0.5*(dz00+dz0M1);
@@ -919,31 +919,6 @@ inline FLOAT comp31 ( const FLOAT * const lv, const FLOAT * const lm, const FLOA
     return (1 / dx00)*( nuiPhalbkPhalb(lm, lvis)*((w10-w00)/dx1+(u01-u00)/dz0) - nuiMhalbkPhalb(lm, lvis)*((w00-wM10)/dx0+(uM11-uM10)/dz0));
 }
 
-// d/dy(nu*(dw/dy+dv/dz)) similar to comp12
-inline FLOAT comp32 ( const FLOAT * const lv, const FLOAT * const lm, const FLOAT * const lvis ) {
-    const FLOAT v00   = lv[mapd(0, 0,0,1)];
-    const FLOAT v01   = lv[mapd(0, 0,1,1)];
-    const FLOAT vM10  = lv[mapd(0,-1,0,1)];
-    const FLOAT vM11  = lv[mapd(0,-1,1,1)];
-  
-    const FLOAT wM10  = lv[mapd(0,-1,0,2)];
-    const FLOAT w00   = lv[mapd(0, 0,0,2)];
-    const FLOAT w10   = lv[mapd(0, 1,0,2)];
-    
-    const FLOAT dy10  = lm[mapd(0, 1,0,1);
-    const FLOAT dy00  = lm[mapd(0, 0,0,1);
-    const FLOAT dyM10 = lm[mapd(0,-1,0,1);
-    
-    const FLOAT dz00  = lm[mapd(0, 0,0,0);
-    const FLOAT dz01  = lm[mapd(0, 0,1,0);
-    
-    const FLOAT dy1 = 0.5*(dy10+dy00);
-    const FLOAT dy0 = 0.5*(dy00+dyM10);
-    
-    const FLOAT dz0 = 0.5*(dz01+dz00);
-    
-    return (1 / dy00)*( nujPhalbkPhalb(lm, lvis)*((w10-w00)/dy1+(v01-v00)/dz0) - nujPhalbkMhalb(lm, lvis)*((w00-wM10)/dy0+(vM11-vM10)/dz0));
-}
 
 inline FLOAT computeF2D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,0)]
@@ -968,9 +943,9 @@ inline FLOAT computeF3D(const FLOAT * const localVelocity, const FLOAT * const l
                 - duwdz ( localVelocity, parameters, localMeshsize ) + parameters.environment.gx );
 }
 
-inline FLOAT computeF3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity const Parameters & parameters, FLOAT dt){
+inline FLOAT computeF3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,0)]
-		+ dt * ( 2.0*comp11 ( localVelocity, localMeshsize, localViscosity ) 
+		+ dt * ( 2.0*comp11 ( localVelocity, localMeshsize, localViscosity, parameters )
 		+ comp12 ( localVelocity, localMeshsize, localViscosity )
 		+ comp13 ( localVelocity, localMeshsize, localViscosity )
 		- du2dx ( localVelocity, parameters, localMeshsize ) 
@@ -987,10 +962,10 @@ inline FLOAT computeG3D(const FLOAT * const localVelocity, const FLOAT * const l
                 - dvwdz ( localVelocity, parameters, localMeshsize ) + parameters.environment.gy );
 }
 
-inline FLOAT computeG3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity const Parameters & parameters, FLOAT dt){
+inline FLOAT computeG3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,1)]
 		+ dt * ( comp21 ( localVelocity, localMeshsize, localViscosity ) 
-		+ 2.0*comp22 ( localVelocity, localMeshsize, localViscosity )
+		+ 2.0*comp22 ( localVelocity, localMeshsize, localViscosity, parameters )
 		+ comp23 ( localVelocity, localMeshsize, localViscosity )
                 - dv2dy ( localVelocity, parameters, localMeshsize )
 		- duvdx ( localVelocity, parameters, localMeshsize )
@@ -1006,11 +981,11 @@ inline FLOAT computeH3D(const FLOAT * const localVelocity, const FLOAT * const l
                 - dvwdy ( localVelocity, parameters, localMeshsize ) + parameters.environment.gz );
 }
 
-inline FLOAT computeH3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity const Parameters & parameters, FLOAT dt){
+inline FLOAT computeH3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,2)]
 		+ dt * ( comp31 ( localVelocity, localMeshsize, localViscosity ) 
 		+ comp32 ( localVelocity, localMeshsize, localViscosity )
-		+ 2.0*comp33 ( localVelocity, localMeshsize, localViscosity )
+		+ 2.0*comp33 ( localVelocity, localMeshsize, localViscosity, parameters )
                 - dw2dz ( localVelocity, parameters, localMeshsize )
 		- duwdx ( localVelocity, parameters, localMeshsize )
                 - dvwdy ( localVelocity, parameters, localMeshsize ) + parameters.environment.gz );
