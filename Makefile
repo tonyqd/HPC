@@ -1,5 +1,5 @@
 #### The petsc environment can also be fixed in the makefile
-PETSC_DIR = /home/mariusz/soft/petsc-3.5.2
+PETSC_DIR = /usr/work/petsc-3.5.2
 PETSC_ARCH = arch-linux2-c-debug
 
 include ${PETSC_DIR}/conf/variables
@@ -12,7 +12,7 @@ include ${PETSC_DIR}/conf/variables
 #
 #
 CC = mpic++
-CFLAGS = -Wall -O3 # -Werror -O3 
+CFLAGS = -Wall -O3 #-Werror 
 SRCDIR = ./
 INCLUDE = -I. -Istencils ${PETSC_CC_INCLUDES}
 
