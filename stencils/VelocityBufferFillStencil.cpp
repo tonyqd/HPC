@@ -31,6 +31,8 @@ void VelocityBufferFillStencil::applyLeftWall ( FlowField & flowField, int i, in
 void VelocityBufferFillStencil::applyRightWall ( FlowField & flowField, int i, int j, int k) {
   /* _lowOffset = 1; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _flowField.getCellsX()+_highOffset-1 ; j = _lowOffset ; k = _lowOffset;
+   *for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
+    	for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++)
    */
   rightVelocityFillBuffer[0 + 4*((k-1)+(localSize[1]*(j-1)))] = flowField.getVelocity().getVector(i-1,j,k)[0];
   rightVelocityFillBuffer[1 + 4*((k-1)+(localSize[1]*(j-1)))] = flowField.getVelocity().getVector(i-1,j,k)[1];
