@@ -132,6 +132,12 @@ class BFStepParameters{
         FLOAT yRatio;
 };
 
+class TurbulentParameters{
+	public:
+		FLOAT kappa;		//
+		FLOAT delta;		// boundary layer thickness
+
+};
 
 
 //@}
@@ -155,6 +161,7 @@ class Parameters {
         StdOutParameters        stdOut;
         BFStepParameters        bfStep;
         // TODO WS2: include parameters for turbulence
+        TurbulentParameters  	turbulent;
         Meshsize                *meshsize;
 };
 

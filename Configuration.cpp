@@ -420,6 +420,15 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         //------------------------------------------------------
         // TODO WS2: Turbulence
         //------------------------------------------------------
+
+        parameters.turbulent.kappa = 0.0;
+        parameters.turbulent.delta = 0.0;
+
+        node = confFile.FirstChildElement()->FirstChildElement("backwardFacingStep");
+        if (node != NULL){
+        	readFloatOptional(parameters.turbulent.kappa, node, "kappa");
+        	readFloatOptional(parameters.turbulent.delta, node, "delta");
+        }
     }
 
     // Broadcasting of the values
@@ -478,6 +487,7 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
     MPI_Bcast(parameters.walls.vectorBack,   3, MY_MPI_FLOAT, 0, communicator);
 
     // TODO WS2: broadcast turbulence parameters
-
+    MPI_Bcast(parameters.turbulent.kappa,   1, MY_MPI_FLOAT, 0, communicator);
+    MPI_Bcast(parameters.turbulent.delta,   1, MY_MPI_FLOAT, 0, communicator);
 
 }
