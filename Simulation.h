@@ -87,8 +87,8 @@ class Simulation {
 		_velocityBufferReadStencil(parameters),
 		_parallelPressureFillBoundaryIterator(_flowField, parameters, _pressureBufferFillStencil, 2, -1),
 		_parallelPressureReadBoundaryIterator(_flowField, parameters, _pressureBufferReadStencil, 2, -1),
-		_parallelVelocityFillBoundaryIterator(_flowField, parameters, _velocityBufferFillStencil, 1, 0),
-		_parallelVelocityReadBoundaryIterator(_flowField, parameters, _velocityBufferReadStencil, 1, 0),
+		_parallelVelocityFillBoundaryIterator(_flowField, parameters, _velocityBufferFillStencil, 2, -1),
+		_parallelVelocityReadBoundaryIterator(_flowField, parameters, _velocityBufferReadStencil, 2, -1),
 		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator, _velocityBufferFillStencil, _velocityBufferReadStencil, _parallelVelocityFillBoundaryIterator, _parallelVelocityReadBoundaryIterator),
        _fghStencil(parameters),
        _fghIterator(_flowField,parameters,_fghStencil),
@@ -153,14 +153,14 @@ class Simulation {
         _solver.solve();
         // TODO WS2: communicate pressure values
         _petscParallelManager.communicatePressure();
- int i=0; int j = 0;int k =0;
-        for (i =0; i < _parameters.parallel.localSize[0] +3; i++ ){
-        	for(i =0; i < _parameters.parallel.localSize[0] +3; i++){
+ /*int i=0; int j = 0;int k =0;
+        for (k =0; k < _parameters.parallel.localSize[0] +3; k++ ){
+        	for(j =0; j < _parameters.parallel.localSize[0] +3; j++){
         		for(i =0; i < _parameters.parallel.localSize[0]+3; i++){
         			printf("processor %d i %d j %d k %d = %f \n", _parameters.parallel.rank ,i,j,k,_flowField.getPressure().getScalar(i,j,k));
         		}
         	}
-        }
+        }*/
 
         // compute velocity
         _velocityIterator.iterate();
