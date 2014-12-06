@@ -36,8 +36,8 @@ inline void loadLocalViscosity3D(FlowField & flowField, FLOAT * const localVisco
     for ( int layer = -1; layer <= 1; layer ++ ){
         for ( int row = -1; row <= 1; row++ ){
             for ( int column = -1; column <= 1; column ++ ){
-	      const FLOAT * const point = flowField.getViscosity().getScalar(i + column, j + row, k + layer);
-	      localViscosity[39 + 27*layer + 9*row + 3*column    ] = point;
+            	localViscosity[39 + 27*layer + 9*row + 3*column] = flowField.getViscosity().getScalar(i + column, j + row, k + layer);
+
 	    }
 	}
     }
