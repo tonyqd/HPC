@@ -32,7 +32,7 @@ void VelocityBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, in
 }
 
 void VelocityBufferReadStencil::applyRightWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _flowField.getCellsX()+_highOffset-1 ; j = _lowOffset ; k = _lowOffset;
    */
 	flowField.getVelocity().getVector(i, j, k)[0] = rightVelocityReadBuffer[0 + 3*((k)+((localSize[2]+3)*(j)))];
@@ -41,7 +41,7 @@ void VelocityBufferReadStencil::applyRightWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
 	flowField.getVelocity().getVector(i, j, k)[0] = bottomVelocityReadBuffer[0 + 6*((k)+((localSize[2]+3)*(i)))];
@@ -53,7 +53,7 @@ void VelocityBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, 
 }
 
 void VelocityBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1 ; k = _lowOffset;
    */
 	flowField.getVelocity().getVector(i, j, k)[0] = topVelocityReadBuffer[0 + 3*((k)+((localSize[2]+3)*(i)))];
@@ -62,7 +62,7 @@ void VelocityBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int
 }
 
 void VelocityBufferReadStencil::applyFrontWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
 	flowField.getVelocity().getVector(i, j, k)[0] = frontVelocityReadBuffer[0 + 6*((j)+((localSize[1]+3)*(i)))];
@@ -74,7 +74,7 @@ void VelocityBufferReadStencil::applyFrontWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferReadStencil::applyBackWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 1; _highOffset = 0;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1 ;
    */
 	flowField.getVelocity().getVector(i, j, k)[0] = backVelocityReadBuffer[0 + 3*((j)+((localSize[1]+3)*(i)))];
