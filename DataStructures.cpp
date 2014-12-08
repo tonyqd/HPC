@@ -36,7 +36,7 @@ void ScalarField::show(const std::string title){
 
 void ScalarField::initialize () {
     for ( int i = 0; i < _size; i++ ){
-        _data[i] = 0.0;
+        _data[i] = 0.0;//0.0
     }
 }
 
