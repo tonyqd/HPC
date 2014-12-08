@@ -168,6 +168,7 @@ class Simulation {
         _petscParallelManager.communicateVelocities();
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
+
     }
 
     /** TODO WS1: plots the flow field. */
