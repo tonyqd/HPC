@@ -34,7 +34,7 @@ void VelocityBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, in
 }
 
 void VelocityBufferReadStencil::applyRightWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _flowField.getCellsX()+_highOffset-1 ; j = _lowOffset ; k = _lowOffset;
    */
 	if( _parameters.parallel.rightNb >= 0){
@@ -45,7 +45,7 @@ void VelocityBufferReadStencil::applyRightWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
 	if( _parameters.parallel.bottomNb >= 0){
@@ -59,7 +59,7 @@ void VelocityBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, 
 }
 
 void VelocityBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1 ; k = _lowOffset;
    */
 	if( _parameters.parallel.topNb >= 0){
@@ -70,7 +70,7 @@ void VelocityBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int
 }
 
 void VelocityBufferReadStencil::applyFrontWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
 	if( _parameters.parallel.frontNb >= 0 ){
@@ -84,7 +84,7 @@ void VelocityBufferReadStencil::applyFrontWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferReadStencil::applyBackWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 1; _highOffset = 0;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1 ;
    */
 	if( _parameters.parallel.backNb >= 0){

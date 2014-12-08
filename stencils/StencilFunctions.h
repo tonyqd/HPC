@@ -111,60 +111,54 @@ inline FLOAT dwdz ( const FLOAT * const lv, const FLOAT * const lm ) {
 
 // first derivative of u-component w.r.t. y-direction, evaltuated at the mid of the cell
 inline FLOAT dudy ( const FLOAT * const lv, const FLOAT * const lm ) {
+	const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+	const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
 
+    const FLOAT u00   = lv[mapd( 0, 0, 0, 0)];
+    const FLOAT u01   = lv[mapd( 0, 1, 0, 0)];
+    const FLOAT u0M1  = lv[mapd( 0,-1, 0, 0)];
 
-		const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
-	    const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
-	    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+    const FLOAT uM10  = lv[mapd(-1, 0, 0, 0)];
+    const FLOAT uM11  = lv[mapd(-1, 1, 0, 0)];
+    const FLOAT uM1M1 = lv[mapd(-1,-1, 0, 0)];
 
-	    const FLOAT u00   = lv[mapd( 0, 0, 0, 0)];
-	    const FLOAT u01   = lv[mapd( 0, 1, 0, 0)];
-	    const FLOAT u0M1  = lv[mapd( 0,-1, 0, 0)];
+    const FLOAT u00u01  = (hyLong1-hyShort)/hyLong1*u00+hyShort/hyLong1*u01;
+    const FLOAT u00u0M1 = (hyLong0-hyShort)/hyLong0*u00+hyShort/hyLong0*u0M1;
 
-	    const FLOAT uM10  = lv[mapd(-1, 0, 0, 0)];
-	    const FLOAT uM11  = lv[mapd(-1, 1, 0, 0)];
-	    const FLOAT uM1M1 = lv[mapd(-1,-1, 0, 0)];
+    const FLOAT uM10uM11  = (hyLong1-hyShort)/hyLong1*uM10+hyShort/hyLong1*uM11;
+    const FLOAT uM10uM1M1 = (hyLong0-hyShort)/hyLong0*uM10+hyShort/hyLong0*uM1M1;
 
-	    const FLOAT u00u01  = (hyLong1-hyShort)/hyLong1*u00+hyShort/hyLong1*u01;
-	    const FLOAT u00u0M1 = (hyLong0-hyShort)/hyLong0*u00+hyShort/hyLong0*u0M1;
+    const FLOAT u0 = 0.5*(u00u01+uM10uM11);
+    const FLOAT uM1 = 0.5*(u00u0M1+uM10uM1M1);
 
-	    const FLOAT uM10uM11  = (hyLong1-hyShort)/hyLong1*uM10+hyShort/hyLong1*uM11;
-	    const FLOAT uM10uM1M1 = (hyLong0-hyShort)/hyLong0*uM10+hyShort/hyLong0*uM1M1;
-
-	    const FLOAT u0 = 0.5*(u00u01+uM10uM11);
-	    const FLOAT uM1 = 0.5*(u00u0M1+uM10uM1M1);
-
-
-	    return (u0-uM1)/(2.0*hyShort);
+    return (u0-uM1)/(2.0*hyShort);
 }
 
 // first derivative of v-component w.r.t. x-drection, evaltuated at the mid of the cell
 inline FLOAT dvdx ( const FLOAT * const lv, const FLOAT * const lm ) {
-		const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
-	    const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and west v-value
-	    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
+	const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+	const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and west v-value
+	const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
 
+	const FLOAT v00   = lv[mapd( 0, 0, 0, 1)];
+	const FLOAT v10   = lv[mapd( 1, 0, 0, 1)];
+	const FLOAT vM10  = lv[mapd(-1, 0, 0, 1)];
 
-	    const FLOAT v00   = lv[mapd( 0, 0, 0, 1)];
-	    const FLOAT v10   = lv[mapd( 1, 0, 0, 1)];
-	    const FLOAT vM10  = lv[mapd(-1, 0, 0, 1)];
+	const FLOAT v0M1  = lv[mapd( 0,-1, 0, 1)];
+	const FLOAT v1M1  = lv[mapd( 1,-1, 0, 1)];
+	const FLOAT vM1M1 = lv[mapd(-1,-1, 0, 1)];
 
-	    const FLOAT v0M1  = lv[mapd( 0,-1, 0, 1)];
-	    const FLOAT v1M1  = lv[mapd( 1,-1, 0, 1)];
-	    const FLOAT vM1M1 = lv[mapd(-1,-1, 0, 1)];
+	const FLOAT v00v10    = (hxLong1-hxShort)/hxLong1*v00+hxShort/hxLong1*v10;
+	const FLOAT v00vM10   = (hxLong0-hxShort)/hxLong0*v00+hxShort/hxLong0*vM10;
 
+	const FLOAT v0M1v1M1  = (hxLong1-hxShort)/hxLong1*v0M1+hxShort/hxLong1*v1M1;
+	const FLOAT v0M1vM1M1 = (hxLong0-hxShort)/hxLong0*v0M1+hxShort/hxLong0*vM1M1;
 
-	    const FLOAT v00v10    = (hxLong1-hxShort)/hxLong1*v00+hxShort/hxLong1*v10;
-	    const FLOAT v00vM10   = (hxLong0-hxShort)/hxLong0*v00+hxShort/hxLong0*vM10;
+	const FLOAT v0  = 0.5*(v00v10+v0M1v1M1);
+    const FLOAT vM1 = 0.5*(v00vM10+v0M1vM1M1);
 
-	    const FLOAT v0M1v1M1  = (hxLong1-hxShort)/hxLong1*v0M1+hxShort/hxLong1*v1M1;
-	    const FLOAT v0M1vM1M1 = (hxLong0-hxShort)/hxLong0*v0M1+hxShort/hxLong0*vM1M1;
-
-	    const FLOAT v0  = 0.5*(v00v10+v0M1v1M1);
-	    const FLOAT vM1 = 0.5*(v00vM10+v0M1vM1M1);
-
-
-	    return (v0-vM1)/(2.0*hxShort);
+    return (v0-vM1)/(2.0*hxShort);
 }
 
 // first derivative of u-component w.r.t. z-direction, evaluated at the mid of the cell
@@ -172,7 +166,6 @@ inline FLOAT dudz( const FLOAT * const lv, const FLOAT * const lm ) {
     const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
     const FLOAT hzLong0 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0,-1,2)]); // distance between center and west v-value
     const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0, 1,2)]); // distance between center and east v-value
-
 
     const FLOAT u00  = lv[mapd( 0, 0, 0, 0)];
     const FLOAT u01  = lv[mapd( 0, 0, 1, 0)];
@@ -191,14 +184,86 @@ inline FLOAT dudz( const FLOAT * const lv, const FLOAT * const lm ) {
     const FLOAT u0 = 0.5*(u00u01+uM10uM11);
     const FLOAT uM1 = 0.5*(u00u0M1+uM10uM1M1);
 
-
     return (u0-uM1)/(2.0*hzShort);
 }
 
+// first derivative of w-component w.r.t. x-direction, evaluated at the mid of the cell
+inline FLOAT dwdx( const FLOAT * const lv, const FLOAT * const lm ) {
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and west v-value
+    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
 
+    const FLOAT w00   = lv[mapd( 0, 0, 0, 2)];
+    const FLOAT w10   = lv[mapd( 1, 0, 0, 2)];
+    const FLOAT wM10  = lv[mapd(-1, 0, 0, 2)];
 
+    const FLOAT w0M1  = lv[mapd( 0, 0,-1, 2)];
+    const FLOAT w1M1  = lv[mapd( 1, 0,-1, 2)];
+    const FLOAT wM1M1 = lv[mapd(-1, 0,-1, 2)];
 
+    const FLOAT w00w10    = (hxLong1-hxShort)/hxLong1*w00+hxShort/hxLong1*w10;
+    const FLOAT w00wM10   = (hxLong0-hxShort)/hxLong0*w00+hxShort/hxLong0*wM10;
 
+    const FLOAT w0M1w1M1  = (hxLong1-hxShort)/hxLong1*w0M1+hxShort/hxLong1*w1M1;
+    const FLOAT w0M1wM1M1 = (hxLong0-hxShort)/hxLong0*w0M1+hxShort/hxLong0*wM1M1;
+
+    const FLOAT w0 = 0.5*(w00w10+w0M1w1M1);
+    const FLOAT wM1 = 0.5*(w00wM10+w0M1wM1M1);
+
+    return (w0-wM1)/(2.0*hxShort);
+}
+
+// first derivative of v-component w.r.t. z-direction, evaluated at the mid of the cell
+inline FLOAT dvdz( const FLOAT * const lv, const FLOAT * const lm ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong0 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0,-1,2)]); // distance between center and west v-value
+    const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0, 1,2)]); // distance between center and east v-value
+
+    const FLOAT v00    = lv[mapd( 0, 0, 0, 1)];
+    const FLOAT v01    = lv[mapd( 0, 0, 1, 1)];
+    const FLOAT v0M1   = lv[mapd( 0, 0,-1, 1)];
+
+    const FLOAT vM10   = lv[mapd( 0,-1, 0, 1)];
+    const FLOAT vM11   = lv[mapd( 0,-1, 1, 1)];
+    const FLOAT vM1M1  = lv[mapd( 0,-1,-1, 1)];
+
+    const FLOAT v00v01   = (hzLong1-hzShort)/hzLong1*v00+hzShort/hzLong1*v01;
+    const FLOAT v00v0M1  = (hzLong0-hzShort)/hzLong0*v00+hzShort/hzLong0*v0M1;
+
+    const FLOAT vM10vM11   = (hzLong1-hzShort)/hzLong1*vM10+hzShort/hzLong1*vM11;
+    const FLOAT vM10vM1M1  = (hzLong0-hzShort)/hzLong0*vM10+hzShort/hzLong0*vM1M1;
+
+    const FLOAT v0 = 0.5*(v00v01+vM10vM11);
+    const FLOAT vM1 = 0.5*(v00v0M1+vM10vM1M1);
+
+    return (v0-vM1)/(2.0*hzShort);
+}
+
+// first derivative of w-component w.r.t. y-direction, evaluated at the mid of the cell
+inline FLOAT dwdy( const FLOAT * const lv, const FLOAT * const lm ) {
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd(0,-1,0,1)]); // distance between center and west v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+
+    const FLOAT w00   = lv[mapd( 0, 0, 0, 2)];
+    const FLOAT w10   = lv[mapd( 0, 1, 0, 2)];
+    const FLOAT wM10  = lv[mapd( 0,-1, 0, 2)];
+
+    const FLOAT w0M1  = lv[mapd( 0, 0,-1, 2)];
+    const FLOAT w1M1  = lv[mapd( 0, 1,-1, 2)];
+    const FLOAT wM1M1 = lv[mapd( 0,-1,-1, 2)];
+
+    const FLOAT w00w10    = (hyLong1-hyShort)/hyLong1*w00+hyShort/hyLong1*w10;
+    const FLOAT w00wM10   = (hyLong0-hyShort)/hyLong0*w00+hyShort/hyLong0*wM10;
+
+    const FLOAT w0M1w1M1  = (hyLong1-hyShort)/hyLong1*w0M1+hyShort/hyLong1*w1M1;
+    const FLOAT w0M1wM1M1 = (hyLong0-hyShort)/hyLong0*w0M1+hyShort/hyLong0*wM1M1;
+
+    const FLOAT w0  = 0.5*(w00w10+w0M1w1M1);
+    const FLOAT wM1 = 0.5*(w00wM10+w0M1wM1M1);
+
+    return (w0-wM1)/(2.0*hyShort);
+}
 
 // second derivative of u-component w.r.t. x-direction, evaluated at the location of the u-component
 inline FLOAT d2udx2 ( const FLOAT * const lv, const FLOAT * const lm ) {

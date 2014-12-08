@@ -22,7 +22,7 @@ void VelocityBufferFillStencil::applyLeftWall ( FlowField & flowField, int i, in
   /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
-  leftVelocityFillBuffer[0 + 3 * (k+(localSize[2]+3)*j)] = flowField.getVelocity().getVector(i+2, j, k)[0];
+  leftVelocityFillBuffer[0 + 3 * ((k)+((localSize[2]+3)*(j)))] = flowField.getVelocity().getVector(i+2, j, k)[0];
   leftVelocityFillBuffer[1 + 3 * ((k)+((localSize[2]+3)*(j)))] = flowField.getVelocity().getVector(i+2, j, k)[1];
   leftVelocityFillBuffer[2 + 3 * ((k)+((localSize[2]+3)*(j)))] = flowField.getVelocity().getVector(i+2, j, k)[2];
 
@@ -43,7 +43,7 @@ void VelocityBufferFillStencil::applyRightWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferFillStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
   bottomVelocityFillBuffer[0 + 3*((k)+((localSize[2]+3)*(i)))] = flowField.getVelocity().getVector(i,j+2,k)[0];
@@ -52,7 +52,7 @@ void VelocityBufferFillStencil::applyBottomWall ( FlowField & flowField, int i, 
 }
 
 void VelocityBufferFillStencil::applyTopWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1 ; k = _lowOffset;
    */
   topVelocityFillBuffer[0 + 6*((k)+((localSize[2]+3)*(i)))] = flowField.getVelocity().getVector(i,j-2,k)[0];
@@ -64,7 +64,7 @@ void VelocityBufferFillStencil::applyTopWall ( FlowField & flowField, int i, int
 }
 
 void VelocityBufferFillStencil::applyFrontWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset;
    */
   frontVelocityFillBuffer[0 + 3*((j)+((localSize[1]+3)*(i)))] = flowField.getVelocity().getVector(i,j,k+2)[0];
@@ -73,7 +73,7 @@ void VelocityBufferFillStencil::applyFrontWall ( FlowField & flowField, int i, i
 }
 
 void VelocityBufferFillStencil::applyBackWall ( FlowField & flowField, int i, int j, int k) {
-  /* _lowOffset = 2; _highOffset = -1;
+  /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1 ;
    */
   backVelocityFillBuffer[0 + 6*((j)+((localSize[1]+3)*(i)))] = flowField.getVelocity().getVector(i,j,k-2)[0];
