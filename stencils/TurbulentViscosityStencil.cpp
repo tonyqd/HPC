@@ -42,7 +42,12 @@ void TurbulentViscosityStencil::apply ( FlowField & flowField,  int i, int j, in
 		 FLOAT S13 = dudz(_localVelocity, _localMeshsize) + dwdx(_localVelocity, _localMeshsize);
 		 FLOAT S23 = dvdz(_localVelocity, _localMeshsize) + dwdy(_localVelocity, _localMeshsize);
 
-		 FLOAT lm = 1; //mixing length input
+		 FLOAT tmp = flowField.getDistance().getScalar(i,j,k);
+		 FLOAT lm = _parameters.turbulent.kappa*flowField.getDistance().getScalar(i,j,k); //mixing length input
+		 FLOAT delta = 1; //needs to be changed
+		 if(lm > 0.09*delta){
+			 lm = 0.09*delta;
+		 }
 
 		 flowField.getViscosity().getScalar(i,j,k) = lm * lm * sqrt(2.0*((S11*S11 + S22*S22 + S33*S33)+2.0*(S12*S12 + S13*S13 + S23*S23)));
 
