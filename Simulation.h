@@ -161,6 +161,7 @@ class Simulation {
         		}
         	}
         }*/
+        //_flowField.getFGH().show();
 
         // compute velocity
         _velocityIterator.iterate();
@@ -168,6 +169,7 @@ class Simulation {
         _petscParallelManager.communicateVelocities();
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
+
 
     }
 
