@@ -56,6 +56,12 @@ class Simulation {
     ParallelBoundaryIterator<FlowField> _parallelVelocityReadBoundaryIterator;
     PetscParallelManager<FlowField> _petscParallelManager;
 
+    // Viscosity communication
+    ViscosityBufferFillStencil _viscosityBufferFillStencil;
+    ViscosityBufferReadStencil _viscosityBufferReadStencil;
+    ParallelBoundaryIterator<FlowField> _parallelViscosityFillBoundaryIterator;
+    ParallelBoundaryIterator<FlowField> _parallelViscosityReadBoundaryIterator;
+
     FGHStencil _fghStencil;
     FieldIterator<FlowField> _fghIterator;
 
@@ -85,11 +91,18 @@ class Simulation {
 		_pressureBufferReadStencil(parameters),
 		_velocityBufferFillStencil(parameters),
 		_velocityBufferReadStencil(parameters),
+		_viscosityBufferFillStencil(parameters),
+		_viscosityBufferReadStencil(parameters),
+
 		_parallelPressureFillBoundaryIterator(_flowField, parameters, _pressureBufferFillStencil, 0, 0),
 		_parallelPressureReadBoundaryIterator(_flowField, parameters, _pressureBufferReadStencil, 0, 0),
 		_parallelVelocityFillBoundaryIterator(_flowField, parameters, _velocityBufferFillStencil, 0, 0),
 		_parallelVelocityReadBoundaryIterator(_flowField, parameters, _velocityBufferReadStencil, 0, 0),
-		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator, _velocityBufferFillStencil, _velocityBufferReadStencil, _parallelVelocityFillBoundaryIterator, _parallelVelocityReadBoundaryIterator),
+		_parallelViscosityFillBoundaryIterator(_flowField, parameters, _viscosityBufferFillStencil, 0, 0),
+		_parallelViscosityReadBoundaryIterator(_flowField, parameters, _viscosityBufferReadStencil, 0, 0),
+		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator,
+				_velocityBufferFillStencil, _velocityBufferReadStencil, _parallelVelocityFillBoundaryIterator, _parallelVelocityReadBoundaryIterator,
+				_viscosityBufferFillStencil, _viscosityBufferReadStencil, _parallelViscosityFillBoundaryIterator, _parallelViscosityReadBoundaryIterator),
        _fghStencil(parameters),
        _fghIterator(_flowField,parameters,_fghStencil),
        _rhsStencil(parameters),

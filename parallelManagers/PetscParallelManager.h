@@ -5,6 +5,9 @@
 #include "../stencils/PressureBufferReadStencil.h"
 #include "../stencils/VelocityBufferFillStencil.h"
 #include "../stencils/VelocityBufferReadStencil.h"
+#include "../stencils/ViscosityBufferFillStencil.h"
+#include "../stencils/ViscosityBufferReadStencil.h"
+
 #include "../Iterators.h"
 #include "../Parameters.h"
 #include "../Definitions.h"
@@ -29,13 +32,20 @@ class PetscParallelManager {
 	  ParallelBoundaryIterator<FlowField> & _parallelVelocityFillBoundaryIterator;
 	  ParallelBoundaryIterator<FlowField> & _parallelVelocityReadBoundaryIterator;
 
+	  ViscosityBufferFillStencil & _viscosityBufferFillStencil;
+	  ViscosityBufferReadStencil & _viscosityBufferReadStencil;
+	  ParallelBoundaryIterator<FlowField> & _parallelViscosityFillBoundaryIterator;
+	  ParallelBoundaryIterator<FlowField> & _parallelViscosityReadBoundaryIterator;
+
+
     public:
 
         /** Constructor
          * @param parameters Reference to the parameters
          */
 	  	  PetscParallelManager(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator,
-        		VelocityBufferFillStencil & velocityBufferFillStencil, VelocityBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator);
+        		VelocityBufferFillStencil & velocityBufferFillStencil, VelocityBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator,
+        		ViscosityBufferFillStencil & viscosityBufferFillStencil, ViscosityBufferReadStencil & viscosityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelViscosityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelViscosityReadBoundaryIterator);
 
         /** Destructor */
         //~PetscParallelManager();
@@ -44,13 +54,16 @@ class PetscParallelManager {
 
         void communicateVelocities();
 
+        void communicateViscosity();
+
 
 };
 
 
 //#include "PetscParallelManager.cpph"
 template <class FlowField> PetscParallelManager<FlowField>::PetscParallelManager(Parameters & parameters, PressureBufferFillStencil & pressureBufferFillStencil, PressureBufferReadStencil & pressureBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelPressureFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelPressureReadBoundaryIterator,
-		VelocityBufferFillStencil & velocityBufferFillStencil, VelocityBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator):
+		VelocityBufferFillStencil & velocityBufferFillStencil, VelocityBufferReadStencil & velocityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelVelocityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelVelocityReadBoundaryIterator,
+		ViscosityBufferFillStencil & viscosityBufferFillStencil, ViscosityBufferReadStencil & viscosityBufferReadStencil, ParallelBoundaryIterator<FlowField> & parallelViscosityFillBoundaryIterator, ParallelBoundaryIterator<FlowField> & parallelViscosityReadBoundaryIterator):
 _parameters(parameters),
 _pressureBufferFillStencil(pressureBufferFillStencil),
 _pressureBufferReadStencil(pressureBufferReadStencil),
@@ -59,9 +72,11 @@ _parallelPressureReadBoundaryIterator(parallelPressureReadBoundaryIterator),
 _velocityBufferFillStencil(velocityBufferFillStencil),
 _velocityBufferReadStencil(velocityBufferReadStencil),
 _parallelVelocityFillBoundaryIterator(parallelVelocityFillBoundaryIterator),
-_parallelVelocityReadBoundaryIterator(parallelVelocityReadBoundaryIterator) {
-
-}
+_parallelVelocityReadBoundaryIterator(parallelVelocityReadBoundaryIterator),
+_viscosityBufferFillStencil(viscosityBufferFillStencil),
+_viscosityBufferReadStencil(viscosityBufferReadStencil),
+_parallelViscosityFillBoundaryIterator(parallelViscosityFillBoundaryIterator),
+_parallelViscosityReadBoundaryIterator(parallelViscosityReadBoundaryIterator) {}
 
 
 template <class FlowField>
@@ -138,5 +153,42 @@ void PetscParallelManager<FlowField>::communicateVelocities() {
 	_parallelVelocityReadBoundaryIterator.iterate();
 }
 
+template <class FlowField>
+void PetscParallelManager<FlowField>::communicateViscosity() {
+
+	int dim = _parameters.geometry.dim;
+
+	_parallelViscosityFillBoundaryIterator.iterate();
+
+	// Copy from left to right
+	MPI_Send(_viscosityBufferFillStencil.leftViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 0, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.rightViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.rightNb, 0, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+
+	// Copy from right to left
+	MPI_Send(_viscosityBufferFillStencil.rightViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.rightNb, 1, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.leftViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 1, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	_parallelViscosityReadBoundaryIterator.iterate();
+
+	// Copy from bottom to top
+	_parallelViscosityFillBoundaryIterator.iterate();
+	MPI_Send(_viscosityBufferFillStencil.bottomViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 2, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.topViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 2, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+
+	// Copy from top to bottom
+	MPI_Send(_viscosityBufferFillStencil.topViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 3, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.bottomViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 3, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	_parallelViscosityReadBoundaryIterator.iterate();
+
+	// Copy from front to back
+	_parallelViscosityFillBoundaryIterator.iterate();
+	MPI_Send(_viscosityBufferFillStencil.frontViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3) ), MY_MPI_FLOAT, _parameters.parallel.frontNb, 4, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.backViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3)), MY_MPI_FLOAT, _parameters.parallel.backNb, 4, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+
+	// Copy from back to front
+	MPI_Send(_viscosityBufferFillStencil.backViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3) ), MY_MPI_FLOAT, _parameters.parallel.backNb, 5, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.frontViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3)), MY_MPI_FLOAT, _parameters.parallel.frontNb, 5, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+
+	_parallelViscosityReadBoundaryIterator.iterate();
+}
 
 #endif

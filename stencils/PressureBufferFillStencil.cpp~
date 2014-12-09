@@ -8,11 +8,11 @@ PressureBufferFillStencil::PressureBufferFillStencil( const Parameters & paramet
   leftPressureFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
   rightPressureFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)*2];
 
-  bottomPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
-  topPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)*2];
+  bottomPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+  topPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)*2];
 
-  frontPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
-  backPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)*2];
+  frontPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
+  backPressureFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)*2];
 
 }
 
