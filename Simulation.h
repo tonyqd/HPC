@@ -20,6 +20,8 @@
 #include "stencils/PressureBufferReadStencil.h"
 #include "stencils/VelocityBufferFillStencil.h"
 #include "stencils/VelocityBufferReadStencil.h"
+#include "stencils/ViscosityBufferFillStencil.h"
+#include "stencils/ViscosityBufferReadStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -50,18 +52,16 @@ class Simulation {
     PressureBufferReadStencil _pressureBufferReadStencil;
     VelocityBufferFillStencil _velocityBufferFillStencil;
     VelocityBufferReadStencil _velocityBufferReadStencil;
+    // Viscosity communication
+    ViscosityBufferFillStencil _viscosityBufferFillStencil;
+    ViscosityBufferReadStencil _viscosityBufferReadStencil;
     ParallelBoundaryIterator<FlowField> _parallelPressureFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelPressureReadBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelVelocityFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelVelocityReadBoundaryIterator;
-    PetscParallelManager<FlowField> _petscParallelManager;
-
-    // Viscosity communication
-    ViscosityBufferFillStencil _viscosityBufferFillStencil;
-    ViscosityBufferReadStencil _viscosityBufferReadStencil;
     ParallelBoundaryIterator<FlowField> _parallelViscosityFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelViscosityReadBoundaryIterator;
-
+    PetscParallelManager<FlowField> _petscParallelManager;
     FGHStencil _fghStencil;
     FieldIterator<FlowField> _fghIterator;
 

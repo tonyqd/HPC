@@ -34,6 +34,8 @@ stencils/PressureBufferFillStencil.o \
 stencils/PressureBufferReadStencil.o \
 stencils/VelocityBufferFillStencil.o \
 stencils/VelocityBufferReadStencil.o \
+stencils/ViscosityBufferFillStencil.o \
+stencils/ViscosityBufferReadStencil.o \
 #parallelManagers/PetscParallelManager.o \
 
 all: ns
