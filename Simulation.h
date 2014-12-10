@@ -22,6 +22,7 @@
 #include "stencils/VelocityBufferReadStencil.h"
 #include "stencils/ViscosityBufferFillStencil.h"
 #include "stencils/ViscosityBufferReadStencil.h"
+#include "stencils/DistanceStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -55,6 +56,9 @@ class Simulation {
     // Viscosity communication
     ViscosityBufferFillStencil _viscosityBufferFillStencil;
     ViscosityBufferReadStencil _viscosityBufferReadStencil;
+    //Distance
+    DistanceStencil _distanceStencil;
+    FieldIterator<FlowField> _distanceIterator;
     ParallelBoundaryIterator<FlowField> _parallelPressureFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelPressureReadBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelVelocityFillBoundaryIterator;
@@ -93,7 +97,8 @@ class Simulation {
 		_velocityBufferReadStencil(parameters),
 		_viscosityBufferFillStencil(parameters),
 		_viscosityBufferReadStencil(parameters),
-
+		_distanceStencil(parameters),
+		_distanceIterator(_flowField,parameters,_distanceStencil,1,0),
 		_parallelPressureFillBoundaryIterator(_flowField, parameters, _pressureBufferFillStencil, 0, 0),
 		_parallelPressureReadBoundaryIterator(_flowField, parameters, _pressureBufferReadStencil, 0, 0),
 		_parallelVelocityFillBoundaryIterator(_flowField, parameters, _velocityBufferFillStencil, 0, 0),

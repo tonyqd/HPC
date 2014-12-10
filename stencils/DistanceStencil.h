@@ -46,10 +46,18 @@ class DistanceStencil : public FieldStencil<FlowField> {
         		if(_parameters.simulation.scenario == "channel"){
         			if(_parameters.meshsize->getPosX(i,j,k) < _parameters.bfStep.xRatio*_parameters.geometry.lengthX){
         				distance = _parameters.meshsize->getPosY(i,j,k) + 0.5*(_parameters.meshsize->getDy(i,j,k)) - _parameters.bfStep.yRatio*_parameters.geometry.lengthY;
-        				if ( (tmp = _parameters.geometry.lengthY - (_parameters.meshsize->getPosY(i,j,k) + 0.5*(_parameters.meshsize->getDy(i,j,k))) -  _parameters.bfStep.yRatio*_parameters.geometry.lengthY) <  _parameters.meshsize->getPosY(i,j,k) ) {
+        				if ( (tmp = _parameters.geometry.lengthY - (_parameters.meshsize->getPosY(i,j,k) + 0.5*(_parameters.meshsize->getDy(i,j,k)))) <  distance ) {
         					distance = tmp;
         				}
+     					if((tmp = (_parameters.meshsize->getPosZ(i,j,k) + 0.5*(_parameters.meshsize->getDz(i,j,k)))) < distance){
+     						distance = tmp;
+     					}
+       					if((tmp = _parameters.geometry.lengthZ - (_parameters.meshsize->getPosZ(i,j,k) + 0.5*(_parameters.meshsize->getDz(i,j,k)))) < distance){
+      						distance = tmp;
+      					}
         			}
+
+
         			else{
         				distance = _parameters.meshsize->getPosY(i,j,k) + 0.5*(_parameters.meshsize->getDy(i,j,k));
 
@@ -62,8 +70,8 @@ class DistanceStencil : public FieldStencil<FlowField> {
        					if((tmp = _parameters.geometry.lengthZ - (_parameters.meshsize->getPosZ(i,j,k) + 0.5*(_parameters.meshsize->getDz(i,j,k)))) < distance){
       						distance = tmp;
       					}
-       					flowField.getDistance().getScalar(i,j,k) = distance;
         			}
+        			flowField.getDistance().getScalar(i,j,k) = distance;
         		}
 
         		if(_parameters.simulation.scenario != "channel"){
