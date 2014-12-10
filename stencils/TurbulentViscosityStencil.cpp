@@ -32,7 +32,7 @@ void TurbulentViscosityStencil::apply ( FlowField & flowField,  int i, int j, in
 
 	 if ((obstacle & OBSTACLE_SELF) == 0){   // If the cell is fluid
 
-		 loadLocalVelocity3D(  flowField, _localVelocity, i, j, k);
+	     loadLocalVelocity3D(  flowField, _localVelocity, i, j, k);
 	     loadLocalMeshsize3D(_parameters, _localMeshsize, i, j, k);
 
 		 FLOAT S11 = 2.0*dudx(_localVelocity, _localMeshsize);
