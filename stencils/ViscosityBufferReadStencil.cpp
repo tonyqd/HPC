@@ -3,7 +3,6 @@
 ViscosityBufferReadStencil::ViscosityBufferReadStencil( const Parameters & parameters):
   BoundaryStencil<FlowField>(parameters), localSize(parameters.parallel.localSize) {
 
-  int dim = parameters.geometry.dim;
 
   leftViscosityReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
   rightViscosityReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];

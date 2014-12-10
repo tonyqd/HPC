@@ -1,4 +1,5 @@
 #### The petsc environment can also be fixed in the makefile
+#PETSC_DIR =/home/matthias/Downloads/petsc-3.5.2
 #PETSC_DIR = /usr/work/petsc-3.5.2
 #PETSC_ARCH = arch-linux2-c-debug
 

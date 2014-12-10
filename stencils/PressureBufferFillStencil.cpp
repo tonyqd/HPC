@@ -3,7 +3,6 @@
 PressureBufferFillStencil::PressureBufferFillStencil( const Parameters & parameters):
   BoundaryStencil<FlowField>(parameters), localSize(parameters.parallel.localSize) {
 
-  int dim = parameters.geometry.dim;
 
   leftPressureFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
   rightPressureFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)*2];
