@@ -73,9 +73,9 @@ void VTKStencil::write ( FlowField & flowField, int timeStep ){
     vtkstream<<"DIMENSIONS "<<  _parameters.parallel.localSize[0] + 1  <<" "<<  _parameters.parallel.localSize[1] + 1 <<" "<< _parameters.parallel.localSize[2]  + 1<<std::endl;
     vtkstream<<"POINTS "<< (_parameters.parallel.localSize[0] + 1)*( _parameters.parallel.localSize[1] + 1)*( _parameters.parallel.localSize[2] +1)  << " float" <<std::endl;
     
-    for(int k = _parameters.parallel.firstCorner[2] + 2; k < _parameters.parallel.firstCorner[2]+_parameters.parallel.localSize[2] + 3; k++){
-      for(int j = _parameters.parallel.firstCorner[1] + 2; j < _parameters.parallel.firstCorner[1]+_parameters.parallel.localSize[1] + 3; j++){
-	for(int i = _parameters.parallel.firstCorner[0] + 2; i < _parameters.parallel.firstCorner[0]+_parameters.parallel.localSize[0] + 3; i++){
+    for(int k =  2; k < _parameters.parallel.localSize[2] + 3; k++){
+      for(int j =  2; j < _parameters.parallel.localSize[1] + 3; j++){
+	for(int i =  2; i < _parameters.parallel.localSize[0] + 3; i++){
 	  vtkstream<< _parameters.meshsize->getPosX(i,j,k) << " " << _parameters.meshsize->getPosY(i,j,k)<< " " << _parameters.meshsize->getPosZ(i,j,k) << std::endl;
 	}
       }
