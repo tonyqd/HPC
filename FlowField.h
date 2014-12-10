@@ -121,6 +121,8 @@ class FlowField {
 
         void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j);
         void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j, int k);
+        void getPressureAndVelocityAndTurbulentViscosity(FLOAT &pressure, FLOAT &viscosity, FLOAT* const velocity, int i, int j);
+        void getPressureAndVelocityAndTurbulentViscosity(FLOAT &pressure, FLOAT &viscosity, FLOAT* const velocity, int i, int j, int k);
 };
 
 #endif
