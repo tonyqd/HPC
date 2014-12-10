@@ -135,8 +135,7 @@ class BFStepParameters{
 class TurbulentParameters{
 	public:
 		FLOAT kappa;		//
-		FLOAT delta;		// boundary layer thickness
-
+		std::string model;			//model type: standard, laminar, turbulent
 };
 
 

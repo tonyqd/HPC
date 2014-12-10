@@ -422,13 +422,21 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         //------------------------------------------------------
 
         parameters.turbulent.kappa = 0.0;
-        parameters.turbulent.delta = 0.0;
 
-        node = confFile.FirstChildElement()->FirstChildElement("backwardFacingStep");
-        if (node != NULL){
-        	readFloatOptional(parameters.turbulent.kappa, node, "kappa");
-        	readFloatOptional(parameters.turbulent.delta, node, "delta");
-        }
+        node = confFile.FirstChildElement()->FirstChildElement("turbulent");
+
+                if (node == NULL){
+                    handleError(1, "Error loading simulation parameters");
+                }
+
+                readFloatMandatory(parameters.turbulent.kappa, node, "kappa");
+
+                subNode = node->FirstChildElement("model");
+                if (subNode != NULL){
+                    readStringMandatory(parameters.turbulent.model, subNode);
+                } else {
+                    handleError (1, "Missing type in simulation parameters");
+                }
     }
 
     // Broadcasting of the values
