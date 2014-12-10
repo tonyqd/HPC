@@ -48,14 +48,17 @@ int main (int argc, char *argv[]) {
     // initialise simulation
     if (parameters.simulation.type=="turbulence"){
       // TODO WS2: initialise turbulent flow field and turbulent simulation object
-      handleError(1,"Turbulence currently not supported yet!");
+    	flowField = new FlowField(parameters);
+    	if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
+    	simulation = new TurbulentSimulation(parameters,*flowField);
+    	//handleError(1,"Turbulence currently not supported yet!");
     } else if (parameters.simulation.type=="dns"){
-      if(rank==0){ std::cout << "Start DNS simulation in " << parameters.geometry.dim << "D" << std::endl; }
-      flowField = new FlowField(parameters);
-      if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
-      simulation = new Simulation(parameters,*flowField);
+    	if(rank==0){ std::cout << "Start DNS simulation in " << parameters.geometry.dim << "D" << std::endl; }
+    	flowField = new FlowField(parameters);
+    	if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
+    	simulation = new Simulation(parameters,*flowField);
     } else {
-      handleError(1, "Unknown simulation type! Currently supported: dns, turbulence");
+    	handleError(1, "Unknown simulation type! Currently supported: dns, turbulence");
     }
     // call initialization of simulation (initialize flow field)
     if(simulation == NULL){ handleError(1, "simulation==NULL!"); }

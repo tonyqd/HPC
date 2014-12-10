@@ -15,7 +15,7 @@ void VTKStencilTurbulent::apply ( FlowField & flowField, int i, int j ){
   const int obstacle = flowField.getFlags().getValue(i, j);
 
       if ((obstacle & OBSTACLE_SELF) == 0){
-	flowField.getPressureAndVelocityAndTurbulenceViscosity(pressure_tmp,viscosity_tmp,velocity_tmp,i,j);
+	flowField.getPressureAndVelocityAndTurbulentViscosity(pressure_tmp,viscosity_tmp,velocity_tmp,i,j);
 	vstream<<velocity_tmp[0]<<" "<<velocity_tmp[1]<<" "<<velocity_tmp[2]<<std::endl;
 	pstream<<pressure_tmp<<std::endl;
 	vistream<<viscosity_tmp<<std::endl;
@@ -66,7 +66,7 @@ void VTKStencilTurbulent::apply ( FlowField & flowField, int i, int j, int k ){
 void VTKStencilTurbulent::write ( FlowField & flowField, int timeStep ){ 
   
   std::stringstream nstream;
-  nstream<<"Daten/"<< _parameters.vtk.prefix << "." << _parameters.parallel.rank << "." << timeStep << ".vtk";
+  nstream<<"Daten/"<<"Turbulent." << _parameters.vtk.prefix << "." << _parameters.parallel.rank << "." << timeStep << ".vtk";
   std::string name = nstream.str();
   
   std::ofstream vtkstream(name.c_str(), std::ios::out | std::ios::trunc);

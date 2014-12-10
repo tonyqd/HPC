@@ -33,6 +33,7 @@
 #include "stencils/FGHStencilTurbulent.h"
 #include "TurbulentViscosityStencil.h"
 #include "stencils/DistanceStencil.h"
+#include "stencils/VTKStencilTurbulent.h"
 #include "Simulation.h"
 
 
@@ -46,15 +47,24 @@ class TurbulentSimulation : public Simulation  {
 	TurbulentViscosityStencil _turbulentViscosityStencil;
 	FieldIterator<FlowField> _turbulentViscosityIterator;
 
+    VTKStencilTurbulent _vtkStencilTurbulent;
+    FieldIterator<FlowField> _vtkIteratorTurbulent;
+
   public:
     TurbulentSimulation(Parameters &parameters, FlowField &flowField):
      Simulation(parameters, flowField),
      _fghStencilTurbulent(parameters),
-     _fghIteratorTurbulent(_flowField,parameters,_fghStencilTurbulent)
+     _fghIteratorTurbulent(_flowField,parameters,_fghStencilTurbulent),
+     _distanceStencil(parameters),
+     _distanceIterator(_flowField,parameters,_distanceStencil,1,0),
+     _turbulentViscosityStencil(parameters),
+     _turbulentViscosityIterator(_flowField,parameters,_turbulentViscosityStencil),
+  	 _vtkStencilTurbulent(parameters),
+  	 _vtkIteratorTurbulent(_flowField,parameters,_vtkStencilTurbulent,1,0)
        {
        }
 
-    virtual ~Simulation(){}
+    virtual ~TurbulentSimulation(){}
 
     /** initialises the flow field according to the scenario */
     virtual void initializeFlowField(){
@@ -90,13 +100,16 @@ class TurbulentSimulation : public Simulation  {
         FieldIterator<FlowField> iterator(_flowField,_parameters,stencil,0,1);
         iterator.iterate();
 	  }
+      _distanceIterator.iterate();
     }
 
     virtual void solveTimestep(){
         // determine and set max. timestep which is allowed in this simulation
         setTimeStep();
-        // compute fgh
-        _fghIterator.iterate();
+        // compute TurbulentViscosity
+        _turbulentViscosityIterator.iterate();
+        // compute Turbulent fgh
+        _fghIteratorTurbulent.iterate();
         // set global boundary values
         _wallFGHIterator.iterate();
         // compute the right hand side
@@ -127,13 +140,14 @@ class TurbulentSimulation : public Simulation  {
 
     /** TODO WS1: plots the flow field. */
     virtual void plotVTK(int timeStep){
-      _vtkIterator.iterate();
-      _vtkStencil.write(_flowField,timeStep);
+      _vtkIteratorTurbulent.iterate();
+      _vtkStencilTurbulent.write(_flowField,timeStep);
       
       
       // TODO WS1: create VTKStencil and respective iterator; iterate stencil
       //           over _flowField and write flow field information to vtk file
     }
+
 
   protected:
     /** sets the time step*/

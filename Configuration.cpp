@@ -496,6 +496,5 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
 
     // TODO WS2: broadcast turbulence parameters
     MPI_Bcast(&(parameters.turbulent.kappa),   1, MY_MPI_FLOAT, 0, communicator);
-    MPI_Bcast(&(parameters.turbulent.delta),   1, MY_MPI_FLOAT, 0, communicator);
 
 }
