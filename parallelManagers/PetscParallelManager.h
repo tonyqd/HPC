@@ -161,32 +161,32 @@ void PetscParallelManager<FlowField>::communicateViscosity() {
 	_parallelViscosityFillBoundaryIterator.iterate();
 
 	// Copy from left to right
-	MPI_Send(_viscosityBufferFillStencil.leftViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 0, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.rightViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.rightNb, 0, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.leftViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1] ) * (_viscosityBufferFillStencil.localSize[2]) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 0, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.rightViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1]) * (_viscosityBufferFillStencil.localSize[2])), MY_MPI_FLOAT, _parameters.parallel.rightNb, 0, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 
 	// Copy from right to left
-	MPI_Send(_viscosityBufferFillStencil.rightViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.rightNb, 1, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.leftViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 1, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.rightViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[1]) * (_viscosityBufferFillStencil.localSize[2])), MY_MPI_FLOAT, _parameters.parallel.rightNb, 1, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.leftViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[1]) * (_viscosityBufferFillStencil.localSize[2]) ), MY_MPI_FLOAT, _parameters.parallel.leftNb, 1, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 	_parallelViscosityReadBoundaryIterator.iterate();
 
 	// Copy from bottom to top
 	_parallelViscosityFillBoundaryIterator.iterate();
-	MPI_Send(_viscosityBufferFillStencil.bottomViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3)), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 2, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.topViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 2, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.bottomViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[2])), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 2, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.topViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[2] ) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 2, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 
 	// Copy from top to bottom
-	MPI_Send(_viscosityBufferFillStencil.topViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 3, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.bottomViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[2] + 3) ), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 3, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.topViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[2] ) ), MY_MPI_FLOAT, _parameters.parallel.topNb, 3, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.bottomViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[2] ) ), MY_MPI_FLOAT, _parameters.parallel.bottomNb, 3, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 	_parallelViscosityReadBoundaryIterator.iterate();
 
 	// Copy from front to back
 	_parallelViscosityFillBoundaryIterator.iterate();
-	MPI_Send(_viscosityBufferFillStencil.frontViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3) ), MY_MPI_FLOAT, _parameters.parallel.frontNb, 4, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.backViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3)), MY_MPI_FLOAT, _parameters.parallel.backNb, 4, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.frontViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[1] ) ), MY_MPI_FLOAT, _parameters.parallel.frontNb, 4, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.backViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[1] )), MY_MPI_FLOAT, _parameters.parallel.backNb, 4, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 
 	// Copy from back to front
-	MPI_Send(_viscosityBufferFillStencil.backViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3) ), MY_MPI_FLOAT, _parameters.parallel.backNb, 5, PETSC_COMM_WORLD);
-	MPI_Recv(_viscosityBufferReadStencil.frontViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0] + 3) * (_viscosityBufferFillStencil.localSize[1] + 3)), MY_MPI_FLOAT, _parameters.parallel.frontNb, 5, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
+	MPI_Send(_viscosityBufferFillStencil.backViscosityFillBuffer, ((_viscosityBufferFillStencil.localSize[0] ) * (_viscosityBufferFillStencil.localSize[1] ) ), MY_MPI_FLOAT, _parameters.parallel.backNb, 5, PETSC_COMM_WORLD);
+	MPI_Recv(_viscosityBufferReadStencil.frontViscosityReadBuffer, ((_viscosityBufferFillStencil.localSize[0]) * (_viscosityBufferFillStencil.localSize[1] )), MY_MPI_FLOAT, _parameters.parallel.frontNb, 5, PETSC_COMM_WORLD, MPI_STATUS_IGNORE);
 
 	_parallelViscosityReadBoundaryIterator.iterate();
 }
