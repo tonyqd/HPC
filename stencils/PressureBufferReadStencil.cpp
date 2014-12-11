@@ -20,7 +20,7 @@ void PressureBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, in
   /* _lowOffset = 0; _highOffset = 0;
    * from ParallelBoundaryIterater:  i = _lowOffset ; j = _lowOffset ; k = _lowOffset; 
    */  
-	if( _parameters.parallel.leftNb >= 0)
+  if( _parameters.parallel.leftNb >= 0){
 	flowField.getPressure().getScalar(i-1,j,k) = leftPressureReadBuffer[((k)+((localSize[2])*(j)))];
 	}
 }

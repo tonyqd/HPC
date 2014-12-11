@@ -1,10 +1,10 @@
 #### The petsc environment can also be fixed in the makefile
-PETSC_DIR =/home/matthias/Downloads/petsc-3.5.2
+#PETSC_DIR =/home/matthias/Downloads/petsc-3.5.2
 #PETSC_DIR = /usr/work/petsc-3.5.2
 #PETSC_ARCH = arch-linux2-c-debug
 
 include ${PETSC_DIR}/conf/variables
-#PETSC_KSP_LIB=-Wall -Werror -O3 -pg -L/lrz/sys/libraries/petsc/3.3-p2/real_mpi.intel_121_opt/linux-gnu-intel/lib  -lpetsc -lX11 -lpthread -L/lrz/sys/intel/mkl103u9/lib/em64t -Wl,--start-group -Wl,-rpath,/lrz/sys/intel/mkl103u9/lib/em64t -mkl -Wl,--end-group -liomp5 -lpthread -lm -L/lrz/sys/intel/mpi_40_3_008/intel64/lib -L/lrz/mnt/sys.x86_64/intel/icc_121_339/composer_xe_2011_sp1.11.339/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3 -L/usr/x86_64-suse-linux/lib -Wl,-rpath,/lrz/mnt/sys.x86_64/libraries/petsc/3.3-p2/real_mpi.intel_121_opt/-Xlinker -L/lrz/mnt/sys.x86_64/intel/ifort_121_339/composer_xe_2011_sp1.11.339/compiler/lib/intel64 -Wl,-rpath,/lrz/sys/intel/mpi_40_3_008/intel64/lib -Wl,-rpath,/opt/intel/mpi-rt/4.0.3 -lifport -lifcore -lm -lm -ldl -lmpi -lmpigf -lmpigi -lpthread -lrt -limf -lsvml -lipgo -ldecimal -lcilkrts -lstdc++ -lgcc_s -lirc -lirc_s -ldl
+PETSC_KSP_LIB=-Wall -Werror -O3 -pg -L/lrz/sys/libraries/petsc/3.3-p2/real_mpi.intel_121_opt/linux-gnu-intel/lib  -lpetsc -lX11 -lpthread -L/lrz/sys/intel/mkl103u9/lib/em64t -Wl,--start-group -Wl,-rpath,/lrz/sys/intel/mkl103u9/lib/em64t -mkl -Wl,--end-group -liomp5 -lpthread -lm -L/lrz/sys/intel/mpi_40_3_008/intel64/lib -L/lrz/mnt/sys.x86_64/intel/icc_121_339/composer_xe_2011_sp1.11.339/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3 -L/usr/x86_64-suse-linux/lib -Wl,-rpath,/lrz/mnt/sys.x86_64/libraries/petsc/3.3-p2/real_mpi.intel_121_opt/-Xlinker -L/lrz/mnt/sys.x86_64/intel/ifort_121_339/composer_xe_2011_sp1.11.339/compiler/lib/intel64 -Wl,-rpath,/lrz/sys/intel/mpi_40_3_008/intel64/lib -Wl,-rpath,/opt/intel/mpi-rt/4.0.3 -lifport -lifcore -lm -lm -ldl -lmpi -lmpigf -lmpigi -lpthread -lrt -limf -lsvml -lipgo -ldecimal -lcilkrts -lstdc++ -lgcc_s -lirc -lirc_s -ldl
 
 # default gnu compiler (currently not used)
 # CC = g++
