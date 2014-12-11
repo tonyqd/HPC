@@ -806,74 +806,84 @@ inline FLOAT dw2dz ( const FLOAT * const lv, const Parameters & parameters, cons
 //helper functions for diffusive Part of NSE
 
 inline FLOAT nuiPhalbjPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00 = mapd(0,0,0,0);
-    const int index_01 = mapd(0,1,0,0);
-    const int index_10 = mapd(1,0,0,0);
-    const int index_11 = mapd(1,1,0,0);
-    return (lvis[index_00] + lvis[index_01] + lvis[index_10] + lvis[index_11])/4.0;
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
+
+    const FLOAT lvis00 = lvis[mapd(0,0,0,0)];
+    const FLOAT lvis01 = lvis[mapd(0,1,0,0)];
+    const FLOAT lvis10 = lvis[mapd(1,0,0,0)];
+    const FLOAT lvis11 = lvis[mapd(1,1,0,0)];
+
+    const FLOAT lvis00lvis01  = (hyLong1-hyShort)/hyLong1*lvis00+hyShort/hyLong1*lvis01;
+    const FLOAT lvis10lvis11  = (hyLong1-hyShort)/hyLong1*lvis10+hyShort/hyLong1*lvis11;
+
+    return = (hxLong1-hxShort)/hxLong1*lvis00lvis01+hxShort/hxLong1*lvis10lvis11;
+
 }
 
 inline FLOAT nuiPhalbjMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd(0, 0,0,0);
-    const int index_0M1 = mapd(0,-1,0,0);
-    const int index_10  = mapd(1, 0,0,0);
-    const int index_1M1 = mapd(1,-1,0,0);
+    const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
+    const FLOAT lvis0M1 = lvis[mapd(0,-1,0,0)];
+    const FLOAT lvis10  = lvis[mapd(1, 0,0,0)];
+    const FLOAT lvis1M1 = lvis[mapd(1,-1,0,0)];
     return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
 }
 
 inline FLOAT nuiPhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00 = mapd(0,0,0,0);
-    const int index_01 = mapd(0,0,1,0);
-    const int index_10 = mapd(1,0,0,0);
-    const int index_11 = mapd(1,0,1,0);
+    const FLOAT lvis00 = lvis[mapd(0,0,0,0)];
+    const FLOAT lvis01 = lvis[mapd(0,0,1,0)];
+    const FLOAT lvis10 = lvis[mapd(1,0,0,0)];
+    const FLOAT lvis11 = lvis[mapd(1,0,1,0)];
     return (lvis[index_00] + lvis[index_01] + lvis[index_10] + lvis[index_11])/4.0;
 }
 
 inline FLOAT nuiPhalbkMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd(0, 0,0,0);
-    const int index_0M1 = mapd(0,0,-1,0);
-    const int index_10  = mapd(1, 0,0,0);
-    const int index_1M1 = mapd(1,0,-1,0);
+    const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
+    const FLOAT lvis0M1 = lvis[mapd(0,0,-1,0)];
+    const FLOAT lvis10  = lvis[mapd(1, 0,0,0)];
+    const FLOAT lvis1M1 = lvis[mapd(1,0,-1,0)];
     return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
 }
 
 inline FLOAT nuiMhalbjPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd( 0,0,0,0);
-    const int index_01  = mapd( 0,1,0,0);
-    const int index_M10 = mapd(-1,0,0,0);
-    const int index_M11 = mapd(-1,1,0,0);
+    const FLOAT lvis00  = lvis[mapd( 0,0,0,0)];
+    const FLOAT lvis01  = lvis[mapd( 0,1,0,0)];
+    const FLOAT lvisM10 = lvis[mapd(-1,0,0,0)];
+    const FLOAT lvisM11 = lvis[mapd(-1,1,0,0)];
     return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
 }
 
 inline FLOAT nujPhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00 = mapd(0,0,0,0);
-    const int index_01 = mapd(0,0,1,0);
-    const int index_10 = mapd(0,1,0,0);
-    const int index_11 = mapd(0,1,1,0);
+    const FLOAT lvis00 = lvis[mapd(0,0,0,0)];
+    const FLOAT lvis01 = lvis[mapd(0,0,1,0)];
+    const FLOAT lvis10 = lvis[mapd(0,1,0,0)];
+    const FLOAT lvis11 = lvis[mapd(0,1,1,0)];
     return (lvis[index_00] + lvis[index_01] + lvis[index_10] + lvis[index_11])/4.0;
 }
 
 inline FLOAT nujPhalbkMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd(0,0, 0,0);
-    const int index_0M1 = mapd(0,0,-1,0);
-    const int index_10  = mapd(0,1, 0,0);
-    const int index_1M1 = mapd(0,1,-1,0);
+    const FLOAT lvis00  = lvis[mapd(0,0, 0,0)];
+    const FLOAT lvis0M1 = lvis[mapd(0,0,-1,0)];
+    const FLOAT lvis10  = lvis[mapd(0,1, 0,0)];
+    const FLOAT lvis1M1 = lvis[mapd(0,1,-1,0)];
     return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
 }
 
 inline FLOAT nujMhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd(0, 0,0,0);
-    const int index_01  = mapd(0, 0,1,0);
-    const int index_M10 = mapd(0,-1,0,0);
-    const int index_M11 = mapd(0,-1,1,0);
+    const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
+    const FLOAT lvis01  = lvis[mapd(0, 0,1,0)];
+    const FLOAT lvisM10 = lvis[mapd(0,-1,0,0)];
+    const FLOAT lvisM11 = lvis[mapd(0,-1,1,0)];
     return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
 }
 
 inline FLOAT nuiMhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
-    const int index_00  = mapd( 0,0,0,0);
-    const int index_01  = mapd( 0,0,1,0);
-    const int index_M10 = mapd(-1,0,0,0);
-    const int index_M11 = mapd(-1,0,1,0);
+    const FLOAT lvis00  = lvis[mapd( 0,0,0,0)];
+    const FLOAT lvis01  = lvis[mapd( 0,0,1,0)];
+    const FLOAT lvisM10 = lvis[mapd(-1,0,0,0)];
+    const FLOAT lvisM11 = lvis[mapd(-1,0,1,0)];
     return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
 }
 
