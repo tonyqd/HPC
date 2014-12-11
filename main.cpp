@@ -3,10 +3,12 @@
 #include <iostream>
 #include "Configuration.h"
 #include "Simulation.h"
+#include "TurbulentSimulation.h"
 #include "parallelManagers/PetscParallelConfiguration.h"
 #include "parallelManagers/PetscParallelManager.h"
 #include "MeshsizeFactory.h"
 #include <iomanip>
+
 
 int main (int argc, char *argv[]) {
 
@@ -29,6 +31,7 @@ int main (int argc, char *argv[]) {
     MeshsizeFactory::getInstance().initMeshsize(parameters);
     FlowField *flowField = NULL;
     Simulation *simulation = NULL;
+    TurbulentSimulation *turbulentsimulation = NULL;
     
     #ifdef DEBUG
     std::cout << "Processor " << parameters.parallel.rank << " with index ";
@@ -50,7 +53,7 @@ int main (int argc, char *argv[]) {
       // TODO WS2: initialise turbulent flow field and turbulent simulation object
     	flowField = new FlowField(parameters);
     	if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
-    	simulation = new TurbulentSimulation(parameters,*flowField);
+    	turbulentsimulation = new TurbulentSimulation(parameters,*flowField);
     	//handleError(1,"Turbulence currently not supported yet!");
     } else if (parameters.simulation.type=="dns"){
     	if(rank==0){ std::cout << "Start DNS simulation in " << parameters.geometry.dim << "D" << std::endl; }

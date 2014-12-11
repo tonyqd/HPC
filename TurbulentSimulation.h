@@ -1,5 +1,4 @@
-#ifndef _SIMULATION_H_
-#define _SIMULATION_H_
+
 
 #include <petscksp.h>
 #include <float.h>
@@ -187,5 +186,5 @@ class TurbulentSimulation : public Simulation  {
 
 };
 
-#endif // _SIMULATION_H_
+//#endif // _SIMULATION_H_
 
