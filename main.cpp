@@ -30,8 +30,9 @@ int main (int argc, char *argv[]) {
     PetscParallelConfiguration parallelConfiguration(parameters);
     MeshsizeFactory::getInstance().initMeshsize(parameters);
     FlowField *flowField = NULL;
-    Simulation *simulation = NULL;
     TurbulentSimulation *turbulentsimulation = NULL;
+    Simulation *simulation = NULL;
+
     
     #ifdef DEBUG
     std::cout << "Processor " << parameters.parallel.rank << " with index ";
@@ -64,7 +65,8 @@ int main (int argc, char *argv[]) {
     	handleError(1, "Unknown simulation type! Currently supported: dns, turbulence");
     }
     // call initialization of simulation (initialize flow field)
-    if(simulation == NULL){ handleError(1, "simulation==NULL!"); }
+    if(simulation == NULL && turbulentsimulation == NULL){ handleError(1, "simulation or turbulentsimulation ==NULL!"); }
+    if(parameters.simulation.type=="dns"){
     simulation->initializeFlowField();
     //flowField->getFlags().show();
 
@@ -102,7 +104,48 @@ int main (int argc, char *argv[]) {
     // TODO WS1: plot final output
     simulation->plotVTK(timeSteps);
 
+    }else if(parameters.simulation.type=="turbulence"){
+        turbulentsimulation->initializeFlowField();
+        //flowField->getFlags().show();
+
+        FLOAT time = 0.0;
+        FLOAT timeStdOut=parameters.stdOut.interval;
+        FLOAT timeVTKOut=parameters.vtk.interval;
+        int timeSteps = 0;
+
+        // TODO WS1: plot initial state
+        turbulentsimulation->plotVTK(timeSteps);
+        // time loop
+        while (time < parameters.simulation.finalTime){
+
+          turbulentsimulation->solveTimestep();
+
+          time += parameters.timestep.dt;
+
+          // std-out: terminal info
+          if ( (rank==0) && (timeStdOut <= time) ){
+              std::cout << "Current time: " << time << "\ttimestep: " <<
+                            parameters.timestep.dt << std::endl;
+              timeStdOut += parameters.stdOut.interval;
+          }
+          // TODO WS1: trigger VTK output
+          if (timeVTKOut <= time){
+    	turbulentsimulation->plotVTK(timeSteps);
+
+    	timeVTKOut += parameters.vtk.interval;
+          }
+
+
+           timeSteps++;
+        }
+
+        // TODO WS1: plot final output
+        turbulentsimulation->plotVTK(timeSteps);
+
+    }
+
     delete simulation; simulation=NULL;
+    delete turbulentsimulation; simulation=NULL;
     delete flowField;  flowField= NULL;
 
     PetscFinalize();

@@ -2,7 +2,7 @@
 <configuration>
     <flow Re="100"/>
     <simulation finalTime="3.0">
-        <type>dns</type>
+        <type>turbulence</type>
         <scenario>channel</scenario>
     </simulation>
     <turbulent kappa="0.51">

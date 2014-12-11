@@ -107,6 +107,7 @@ class TurbulentSimulation : public Simulation  {
         setTimeStep();
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
+        //_flowField.getViscosity().show();
         // compute Turbulent fgh
         _fghIteratorTurbulent.iterate();
         // set global boundary values
