@@ -819,7 +819,7 @@ inline FLOAT nuiPhalbjPhalb ( const FLOAT * const lm, const FLOAT * const lvis )
     const FLOAT lvis00lvis01  = (hyLong1-hyShort)/hyLong1*lvis00+hyShort/hyLong1*lvis01;
     const FLOAT lvis10lvis11  = (hyLong1-hyShort)/hyLong1*lvis10+hyShort/hyLong1*lvis11;
 
-    return = (hxLong1-hxShort)/hxLong1*lvis00lvis01+hxShort/hxLong1*lvis10lvis11;
+    return  (hxLong1-hxShort)/hxLong1*lvis00lvis01+hxShort/hxLong1*lvis10lvis11;
 
 }
 
