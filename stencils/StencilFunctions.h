@@ -111,8 +111,8 @@ inline FLOAT dwdz ( const FLOAT * const lv, const FLOAT * const lm ) {
 
 // first derivative of u-component w.r.t. y-direction, evaltuated at the mid of the cell
 inline FLOAT dudy ( const FLOAT * const lv, const FLOAT * const lm ) {
-	const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
-	const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
     const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
 
     const FLOAT u00   = lv[mapd( 0, 0, 0, 0)];
@@ -824,67 +824,139 @@ inline FLOAT nuiPhalbjPhalb ( const FLOAT * const lm, const FLOAT * const lvis )
 }
 
 inline FLOAT nuiPhalbjMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
+
     const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
     const FLOAT lvis0M1 = lvis[mapd(0,-1,0,0)];
     const FLOAT lvis10  = lvis[mapd(1, 0,0,0)];
     const FLOAT lvis1M1 = lvis[mapd(1,-1,0,0)];
-    return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
+    
+    const FLOAT lvis00lvis0M1  = (hyLong0-hyShort)/hyLong0*lvis00+hyShort/hyLong0*lvis0M1;
+    const FLOAT lvis10lvis1M1  = (hyLong0-hyShort)/hyLong0*lvis10+hyShort/hyLong0*lvis1M1;
+    
+    return (hxLong1-hxShort)/hxLong1*lvis00lvis0M1+hxShort/hxLong1*lvis10lvis1M1;
 }
 
 inline FLOAT nuiPhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0, 1,2)]); // distance between center and east v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
+ 
     const FLOAT lvis00 = lvis[mapd(0,0,0,0)];
     const FLOAT lvis01 = lvis[mapd(0,0,1,0)];
     const FLOAT lvis10 = lvis[mapd(1,0,0,0)];
     const FLOAT lvis11 = lvis[mapd(1,0,1,0)];
-    return (lvis[index_00] + lvis[index_01] + lvis[index_10] + lvis[index_11])/4.0;
+    
+    const FLOAT lvis00lvis01 = (hzLong1-hzShort)/hzLong1*lvis00+hzShort/hzLong1*lvis01;
+    const FLOAT lvis10lvis11 = (hzLong1-hzShort)/hzLong1*lvis10+hzShort/hzLong1*lvis11;
+    
+    return (hxLong1-hxShort)/hxLong1*lvis00lvis01+hxShort/hxLong1*lvis10lvis11;
 }
 
 inline FLOAT nuiPhalbkMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong0 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0,-1,2)]); // distance between center and west v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong1 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd( 1,0,0,0)]); // distance between center and east v-value
+  
     const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
     const FLOAT lvis0M1 = lvis[mapd(0,0,-1,0)];
     const FLOAT lvis10  = lvis[mapd(1, 0,0,0)];
     const FLOAT lvis1M1 = lvis[mapd(1,0,-1,0)];
-    return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
+    
+    const FLOAT lvis00lvis0M1 = (hzLong0-hzShort)/hzLong0*lvis00+hzShort/hzLong0*lvis0M1;
+    const FLOAT lvis10lvis1M1 = (hzLong0-hzShort)/hzLong0*lvis10+hzShort/hzLong0*lvis1M1;
+    
+    return (hxLong1-hxShort)/hxLong1*lvis00lvis0M1+hxShort/hxLong1*lvis10lvis1M1;
 }
 
 inline FLOAT nuiMhalbjPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and east v-value
+
     const FLOAT lvis00  = lvis[mapd( 0,0,0,0)];
     const FLOAT lvis01  = lvis[mapd( 0,1,0,0)];
     const FLOAT lvisM10 = lvis[mapd(-1,0,0,0)];
     const FLOAT lvisM11 = lvis[mapd(-1,1,0,0)];
-    return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
+    
+    const FLOAT lvis00lvis01  = (hyLong1-hyShort)/hyLong1*lvis00+hyShort/hyLong1*lvis01;
+    const FLOAT lvisM10lvisM11  = (hyLong1-hyShort)/hyLong1*lvisM10+hyShort/hyLong1*lvisM11;
+    
+    return (hxLong0-hxShort)/hxLong0*lvis00lvis01+hxShort/hxLong0*lvisM10lvisM11;
 }
 
 inline FLOAT nujPhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0, 1,2)]); // distance between center and east v-value
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+
     const FLOAT lvis00 = lvis[mapd(0,0,0,0)];
     const FLOAT lvis01 = lvis[mapd(0,0,1,0)];
     const FLOAT lvis10 = lvis[mapd(0,1,0,0)];
     const FLOAT lvis11 = lvis[mapd(0,1,1,0)];
-    return (lvis[index_00] + lvis[index_01] + lvis[index_10] + lvis[index_11])/4.0;
+    
+    const FLOAT lvis00lvis01 = (hzLong1-hzShort)/hzLong1*lvis00+hzShort/hzLong1*lvis01;
+    const FLOAT lvis10lvis11 = (hzLong1-hzShort)/hzLong1*lvis10+hzShort/hzLong1*lvis11;
+ 
+    return (hyLong1-hyShort)/hyLong1*lvis00lvis01+hyShort/hyLong1*lvis10lvis11;
 }
 
 inline FLOAT nujPhalbkMhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong0 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0,0,-1,2)]); // distance between center and east v-value
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong1 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,1,0,1)]); // distance between center and east v-value
+
     const FLOAT lvis00  = lvis[mapd(0,0, 0,0)];
     const FLOAT lvis0M1 = lvis[mapd(0,0,-1,0)];
     const FLOAT lvis10  = lvis[mapd(0,1, 0,0)];
     const FLOAT lvis1M1 = lvis[mapd(0,1,-1,0)];
-    return (lvis[index_00] + lvis[index_0M1] + lvis[index_10] + lvis[index_1M1])/4.0;
+        
+    const FLOAT lvis00lvis0M1 = (hzLong0-hzShort)/hzLong0*lvis00+hzShort/hzLong0*lvis0M1;
+    const FLOAT lvis10lvis1M1 = (hzLong0-hzShort)/hzLong0*lvis10+hzShort/hzLong0*lvis1M1;
+    
+    return (hyLong1-hyShort)/hyLong1*lvis00lvis0M1+hyShort/hyLong1*lvis10lvis1M1;
 }
 
 inline FLOAT nujMhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0, 0, 1,2)]); // distance between center and east v-value
+    const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and east v-value
+
     const FLOAT lvis00  = lvis[mapd(0, 0,0,0)];
     const FLOAT lvis01  = lvis[mapd(0, 0,1,0)];
     const FLOAT lvisM10 = lvis[mapd(0,-1,0,0)];
     const FLOAT lvisM11 = lvis[mapd(0,-1,1,0)];
-    return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
+    
+    const FLOAT lvis00lvis01 = (hzLong1-hzShort)/hzLong1*lvis00+hzShort/hzLong1*lvis01;
+    const FLOAT lvisM10lvisM11 = (hzLong1-hzShort)/hzLong1*lvisM10+hzShort/hzLong1*lvisM11;
+    
+    return (hyLong0-hyShort)/hyLong0*lvis00lvis01+hyShort/hyLong0*lvisM10lvisM11;
 }
 
 inline FLOAT nuiMhalbkPhalb ( const FLOAT * const lm, const FLOAT * const lvis ) {
+    const FLOAT hzShort = 0.5*lm[mapd( 0,0,0,2)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hzLong1 = 0.5*(lm[mapd(0,0,0,2)] + lm[mapd( 0, 0, 1,2)]); // distance between center and east v-value
+    const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
+    const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and east v-value
+
     const FLOAT lvis00  = lvis[mapd( 0,0,0,0)];
     const FLOAT lvis01  = lvis[mapd( 0,0,1,0)];
     const FLOAT lvisM10 = lvis[mapd(-1,0,0,0)];
     const FLOAT lvisM11 = lvis[mapd(-1,0,1,0)];
-    return (lvis[index_00] + lvis[index_01] + lvis[index_M10] + lvis[index_M11])/4.0;
+    
+    const FLOAT lvis00lvis01 = (hzLong1-hzShort)/hzLong1*lvis00+hzShort/hzLong1*lvis01;
+    const FLOAT lvisM10lvisM11 = (hzLong1-hzShort)/hzLong1*lvisM10+hzShort/hzLong1*lvisM11;
+       
+    return (hxLong0-hxShort)/hxLong0*lvis00lvis01+hxShort/hxLong0*lvisM10lvisM11;
 }
 
 // New components for the diffusive Part of the Navier-Stokes-Equation
