@@ -104,6 +104,12 @@ int main (int argc, char *argv[]) {
     // TODO WS1: plot final output
     simulation->plotVTK(timeSteps);
 
+    delete simulation; simulation=NULL;
+    delete turbulentsimulation; simulation=NULL;
+    delete flowField;  flowField= NULL;
+
+    PetscFinalize();
+
     }else if(parameters.simulation.type=="turbulence"){
         turbulentsimulation->initializeFlowField();
         //flowField->getFlags().show();
@@ -142,11 +148,19 @@ int main (int argc, char *argv[]) {
         // TODO WS1: plot final output
         turbulentsimulation->plotVTK(timeSteps);
 
-    }
+        delete simulation; simulation=NULL;
+        delete turbulentsimulation; simulation=NULL;
+        delete flowField;  flowField= NULL;
+
+        PetscFinalize();
+
+    }else {
 
     delete simulation; simulation=NULL;
     delete turbulentsimulation; simulation=NULL;
     delete flowField;  flowField= NULL;
 
     PetscFinalize();
+
+    }
 }
