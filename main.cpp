@@ -52,6 +52,7 @@ int main (int argc, char *argv[]) {
     // initialise simulation
     if (parameters.simulation.type=="turbulence"){
       // TODO WS2: initialise turbulent flow field and turbulent simulation object
+    	if(rank==0){ std::cout << "Start Turbulence simulation in " << parameters.geometry.dim << "D" << std::endl; }
     	flowField = new FlowField(parameters);
     	if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
     	turbulentsimulation = new TurbulentSimulation(parameters,*flowField);
