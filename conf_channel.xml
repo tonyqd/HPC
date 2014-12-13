@@ -6,7 +6,7 @@
         <scenario>channel</scenario>
     </simulation>
     <turbulent kappa="0.51">
-        <model>dns</model>  <!--standard,laminar,turbulent-->
+        <model>default</model>  <!--default,standard,laminar,turbulent-->
     </turbulent>
     <backwardFacingStep xRatio="0.2" yRatio="0.2"/>
     <timestep dt="1" tau="0.5"/>
