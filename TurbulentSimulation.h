@@ -22,6 +22,7 @@
 #include "stencils/ViscosityBufferFillStencil.h"
 #include "stencils/ViscosityBufferReadStencil.h"
 #include "stencils/DistanceStencil.h"
+#include "stencils/MaxViscosityStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -43,6 +44,9 @@ class TurbulentSimulation : public Simulation  {
 	DistanceStencil _distanceStencil;
 	FieldIterator<FlowField> _distanceIterator;
 
+	MaxViscosityStencil _maxViscosityStencil;
+	FieldIterator<FlowField> _maxViscosityIterator;
+
 	TurbulentViscosityStencil _turbulentViscosityStencil;
 	FieldIterator<FlowField> _turbulentViscosityIterator;
 
@@ -56,6 +60,8 @@ class TurbulentSimulation : public Simulation  {
      _fghIteratorTurbulent(_flowField,parameters,_fghStencilTurbulent),
      _distanceStencil(parameters),
      _distanceIterator(_flowField,parameters,_distanceStencil,1,0),
+     _maxViscosityStencil(parameters),
+     _maxViscosityIterator(_flowField,parameters,_maxViscosityStencil,1,0),
      _turbulentViscosityStencil(parameters),
      _turbulentViscosityIterator(_flowField,parameters,_turbulentViscosityStencil),
   	 _vtkStencilTurbulent(parameters),
@@ -163,6 +169,9 @@ class TurbulentSimulation : public Simulation  {
       _maxUStencil.reset();
       _maxUFieldIterator.iterate();
       _maxUBoundaryIterator.iterate();
+      //determine maximum viscosity
+      _maxViscosityStencil.reset();
+      _maxViscosityIterator.iterate();
       if (_parameters.geometry.dim == 3) {
         factor += 1.0/(_parameters.meshsize->getDzMin() * _parameters.meshsize->getDzMin());
         _parameters.timestep.dt = 1.0 / _maxUStencil.getMaxValues()[2];
@@ -171,7 +180,7 @@ class TurbulentSimulation : public Simulation  {
       }
 
       localMin = std::min(_parameters.timestep.dt,
-                                        std::min(std::min(_parameters.flow.Re/(2*factor),
+                                        std::min(std::min(1.0/(_maxViscosityStencil.getMaxValues() + 1.0/_parameters.flow.Re)/(2*factor),
                                         1 / _maxUStencil.getMaxValues()[0]),
                                         1 / _maxUStencil.getMaxValues()[1]));
 
