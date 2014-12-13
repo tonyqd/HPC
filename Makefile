@@ -28,6 +28,7 @@ stencils/MaxUStencil.o stencils/MovingWallStencils.o stencils/PeriodicBoundarySt
 stencils/FGHStencil.o stencils/TurbulentViscosityStencil.o stencils/FGHStencilTurbulent.o solvers/SORSolver.o solvers/PetscSolver.o \
 stencils/RHSStencil.o stencils/VelocityStencil.o \
 stencils/VTKStencil.o stencils/VTKStencilTurbulent.o \
+stencils/MaxViscosityStencil.o \
 parallelManagers/PetscParallelConfiguration.o\
 GlobalBoundaryFactory.o\
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o\
