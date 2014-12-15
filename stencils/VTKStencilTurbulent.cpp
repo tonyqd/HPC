@@ -81,8 +81,8 @@ void VTKStencilTurbulent::write ( FlowField & flowField, int timeStep ){
     
     for(int k =  2; k < _parameters.parallel.localSize[2] + 3; k++){
       for(int j =  2; j < _parameters.parallel.localSize[1] + 3; j++){
-	for(int i =  2; i < _parameters.parallel.localSize[0] + 3; i++){
-	  vtkstream<< _parameters.meshsize->getPosX(i,j,k) << " " << _parameters.meshsize->getPosY(i,j,k)<< " " << _parameters.meshsize->getPosZ(i,j,k) << std::endl;
+    	  for(int i =  2; i < _parameters.parallel.localSize[0] + 3; i++){
+    		  vtkstream<< _parameters.meshsize->getPosX(i,j,k) << " " << _parameters.meshsize->getPosY(i,j,k)<< " " << _parameters.meshsize->getPosZ(i,j,k) << std::endl;
 	}
       }
     }
@@ -90,9 +90,9 @@ void VTKStencilTurbulent::write ( FlowField & flowField, int timeStep ){
   } else {
     vtkstream<<"DIMENSIONS "<<  _parameters.parallel.localSize[0] + 1  <<" "<<  _parameters.parallel.localSize[1] + 1 <<" "<< 1 <<std::endl;
     vtkstream<<"POINTS "<< (_parameters.parallel.localSize[0] + 1)*( _parameters.parallel.localSize[1] + 1)*1  << " float" <<std::endl;
-    for(int j = _parameters.parallel.firstCorner[1] + 2; j < _parameters.parallel.firstCorner[1]+_parameters.parallel.localSize[1] + 3; j++){
-      for(int i = _parameters.parallel.firstCorner[0] + 2; i < _parameters.parallel.firstCorner[0]+_parameters.parallel.localSize[0] + 3; i++){
-	vtkstream<< _parameters.meshsize->getPosX(i,j) << " " << _parameters.meshsize->getPosY(i,j)<< " " << 0 << std::endl;
+    for(int j = _parameters.parallel.firstCorner[1] + 2; j < _parameters.parallel.localSize[1] + 3; j++){
+      for(int i = 2; i < _parameters.parallel.localSize[0] + 3; i++){
+    	  vtkstream<< _parameters.meshsize->getPosX(i,j) << " " << _parameters.meshsize->getPosY(i,j)<< " " << 0 << std::endl;
       } 
     } 
     vtkstream<<"\n"<<"CELL_DATA "<< (_parameters.parallel.localSize[0] )*( _parameters.parallel.localSize[1] )*1 <<std::endl;

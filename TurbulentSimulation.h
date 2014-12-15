@@ -111,7 +111,7 @@ class TurbulentSimulation : public Simulation  {
     virtual void solveTimestep(){
         // determine and set max. timestep which is allowed in this simulation
         //setTimeStep();
-      _parameters.timestep.dt = 0.0001;
+        _parameters.timestep.dt = 0.0001;
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
         //_flowField.getViscosity().show();
