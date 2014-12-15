@@ -43,9 +43,11 @@ class DistanceStencil : public FieldStencil<FlowField> {
         				if ( (tmp = _parameters.geometry.lengthY - (_parameters.meshsize->getPosY(i,j) + 0.5*(_parameters.meshsize->getDy(i,j)))) <  _parameters.meshsize->getPosY(i,j) ) {
       						distance = tmp;
         				}
-       					if((tmp = (_parameters.meshsize->getPosX(i,j)+ 0.5*(_parameters.meshsize->getDx(i,j)) - _parameters.bfStep.xRatio*_parameters.geometry.lengthX)) < distance){
-       						distance = tmp;
-       					}
+        				if(_parameters.meshsize->getPosY(i,j) < _parameters.bfStep.yRatio*_parameters.geometry.lengthY){
+        					if((tmp = (_parameters.meshsize->getPosX(i,j)+ 0.5*(_parameters.meshsize->getDx(i,j)) - _parameters.bfStep.xRatio*_parameters.geometry.lengthX)) < distance){
+        						distance = tmp;
+        				    }
+        				}
         			}
         			flowField.getDistance().getScalar(i,j) = distance;
         		}
@@ -94,8 +96,6 @@ class DistanceStencil : public FieldStencil<FlowField> {
       						distance = tmp;
       					}
         			}
-
-
         			else{
         				distance = _parameters.meshsize->getPosY(i,j,k) + 0.5*(_parameters.meshsize->getDy(i,j,k));
 
@@ -108,8 +108,10 @@ class DistanceStencil : public FieldStencil<FlowField> {
        					if((tmp = _parameters.geometry.lengthZ - (_parameters.meshsize->getPosZ(i,j,k) + 0.5*(_parameters.meshsize->getDz(i,j,k)))) < distance){
       						distance = tmp;
       					}
-       					if((tmp = (_parameters.meshsize->getPosX(i,j,k)+ 0.5*(_parameters.meshsize->getDx(i,j,k)) - _parameters.bfStep.xRatio*_parameters.geometry.lengthX)) < distance){
-       						distance = tmp;
+       					if(_parameters.meshsize->getPosY(i,j,k) < _parameters.bfStep.yRatio*_parameters.geometry.lengthY){
+       						if((tmp = (_parameters.meshsize->getPosX(i,j,k)+ 0.5*(_parameters.meshsize->getDx(i,j,k)) - _parameters.bfStep.xRatio*_parameters.geometry.lengthX)) < distance){
+       							distance = tmp;
+       						}
        					}
         			}
         			flowField.getDistance().getScalar(i,j,k) = distance;
