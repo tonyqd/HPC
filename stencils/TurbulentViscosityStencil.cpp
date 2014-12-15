@@ -19,7 +19,32 @@ void TurbulentViscosityStencil::apply ( FlowField & flowField,  int i, int j ){
 		 FLOAT S22 = 2.0*dvdy(_localVelocity, _localMeshsize);
 		 FLOAT S12 = dudy(_localVelocity, _localMeshsize) + dvdx(_localVelocity, _localMeshsize);
 
-		 FLOAT lm = 1; //mixing length input
+		 //default
+		 FLOAT lm = 0.0;
+		 FLOAT delta;
+
+		 //laminar reference case
+		 if(_parameters.turbulent.model=="standard"){
+			 lm = _parameters.turbulent.kappa*flowField.getDistance().getScalar(i,j);
+		 }
+
+		 //laminar flat plate Boundary layer
+		 if(_parameters.turbulent.model=="laminar"){
+			 lm = _parameters.turbulent.kappa*flowField.getDistance().getScalar(i,j);
+			 delta = 0.09*4.91*pow((_parameters.geometry.lengthX*(1.0-_parameters.bfStep.xRatio))/_parameters.flow.Re,0.5)*pow(_parameters.meshsize->getPosX(i,j) + _parameters.meshsize->getDx(i,j),0.5);
+			 if(lm > delta){
+				 lm = delta;
+			 }
+		 }
+
+		 //turbulent flat plate Boundary layer
+		 if(_parameters.turbulent.model=="turbulent"){
+			 lm = _parameters.turbulent.kappa*flowField.getDistance().getScalar(i,j);
+			 delta = 0.09*0.382*pow((_parameters.geometry.lengthX*(1.0-_parameters.bfStep.xRatio))/_parameters.flow.Re,0.2)*pow(_parameters.meshsize->getPosX(i,j) + _parameters.meshsize->getDx(i,j),0.8);
+			 if(lm > delta){
+				 lm = delta;
+			 }
+		 }
 
 		 flowField.getViscosity().getScalar(i,j) = lm * lm * sqrt(2.0*((S11*S11 + S22*S22)+2.0*(S12*S12)));
 

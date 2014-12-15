@@ -30,6 +30,17 @@ inline void loadLocalVelocity3D(FlowField & flowField, FLOAT * const localVeloci
     }
 }
 
+inline void loadLocalViscosity2D(FlowField & flowField, FLOAT * const localViscosity, int i, int j){
+    for ( int layer = -1; layer <= 1; layer ++ ){
+        for ( int row = -1; row <= 1; row++ ){
+            for ( int column = -1; column <= 1; column ++ ){
+            	localViscosity[39 + 27*layer + 9*row + 3*column] = flowField.getViscosity().getScalar(i + column, j + row);
+
+	    }
+	}
+    }
+}
+
 // Load the local viscosity cube with surrounding viscosities
 // array is almost empty but can be acessed with the same scheme as the other
 inline void loadLocalViscosity3D(FlowField & flowField, FLOAT * const localViscosity, int i, int j, int k){
@@ -1164,6 +1175,15 @@ inline FLOAT computeF2D(const FLOAT * const localVelocity, const FLOAT * const l
                     - duvdy (localVelocity, parameters, localMeshsize) + parameters.environment.gx);
 }
 
+inline FLOAT computeF2D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity, const Parameters & parameters, FLOAT dt){
+    return localVelocity [mapd(0,0,0,0)]
+		+ dt * ( 2.0*comp11 ( localVelocity, localMeshsize, localViscosity, parameters )
+		+ comp12 ( localVelocity, localMeshsize, localViscosity )
+		- du2dx ( localVelocity, parameters, localMeshsize )
+		- duvdy ( localVelocity, parameters, localMeshsize )
+        + parameters.environment.gx );
+}
+
 inline FLOAT computeG2D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,1)] 
         + dt * ( 1 / parameters.flow.Re * ( d2vdx2 ( localVelocity, localMeshsize )
@@ -1171,6 +1191,14 @@ inline FLOAT computeG2D(const FLOAT * const localVelocity, const FLOAT * const l
                     - dv2dy (localVelocity, parameters, localMeshsize) + parameters.environment.gy);
 }
 
+inline FLOAT computeG2D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const FLOAT * const localViscosity, const Parameters & parameters, FLOAT dt){
+    return localVelocity [mapd(0,0,0,1)]
+		+ dt * ( comp21 ( localVelocity, localMeshsize, localViscosity )
+		+ 2.0*comp22 ( localVelocity, localMeshsize, localViscosity, parameters )
+        - dv2dy ( localVelocity, parameters, localMeshsize )
+		- duvdx ( localVelocity, parameters, localMeshsize )
+		+ parameters.environment.gy );
+}
 
 inline FLOAT computeF3D(const FLOAT * const localVelocity, const FLOAT * const localMeshsize, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,0)]
