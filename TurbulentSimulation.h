@@ -106,11 +106,13 @@ class TurbulentSimulation : public Simulation  {
         iterator.iterate();
 	  }
       _distanceIterator.iterate();
+      //if(_parameters.parallel.rank == 0){
+      //_flowField.getDistance().show();}
     }
 
     virtual void solveTimestep(){
         // determine and set max. timestep which is allowed in this simulation
-        //setTimeStep();
+        //setTimeStep();  //time steping does work, but time steps are very small
         _parameters.timestep.dt = 0.0001;
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
