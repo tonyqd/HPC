@@ -3,15 +3,24 @@
 PressureBufferReadStencil::PressureBufferReadStencil( const Parameters & parameters):
   BoundaryStencil<FlowField>(parameters), localSize(parameters.parallel.localSize) {
 
+	if(parameters.geometry.dim ==3){
+	  leftPressureReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)*2];
+	  rightPressureReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
 
-  leftPressureReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)*2];
-  rightPressureReadBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
+	  bottomPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)*2];
+	  topPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
 
-  bottomPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)*2];
-  topPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
+	  frontPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)*2];
+	  backPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+	}
 
-  frontPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)*2];
-  backPressureReadBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+	if(parameters.geometry.dim ==2){
+		leftPressureReadBuffer = new FLOAT[(localSize[1]+3) *2];
+		rightPressureReadBuffer = new FLOAT[(localSize[1]+3) ];
+
+		bottomPressureReadBuffer = new FLOAT[(localSize[0]+3) *2];
+		topPressureReadBuffer = new FLOAT[(localSize[0]+3)];
+	}
   
 }
 
@@ -78,14 +87,28 @@ void PressureBufferReadStencil::applyBackWall ( FlowField & flowField, int i, in
 /*2D
  */
 void PressureBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.leftNb >= 0){
+		flowField.getPressure().getScalar(i,j) = leftPressureReadBuffer[0+2*j];
+		flowField.getPressure().getScalar(i+1,j) = leftPressureReadBuffer[1+2*j];
+		}
 }
 
 void PressureBufferReadStencil::applyRightWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.rightNb >= 0){
+			flowField.getPressure().getScalar(i,j) = rightPressureReadBuffer[j];
+		}
 }
 
 void PressureBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.bottomNb >= 0){
+			flowField.getPressure().getScalar(i,j) = bottomPressureReadBuffer[0+2*i];
+			flowField.getPressure().getScalar(i,j+1) = bottomPressureReadBuffer[1+2*i];
+		}
 }
 
 void PressureBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.topNb >= 0){
+			flowField.getPressure().getScalar(i,j) = topPressureReadBuffer[i];
+		}
 }
 

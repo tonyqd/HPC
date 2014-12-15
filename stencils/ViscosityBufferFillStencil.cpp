@@ -3,15 +3,24 @@
 ViscosityBufferFillStencil::ViscosityBufferFillStencil( const Parameters & parameters):
   BoundaryStencil<FlowField>(parameters), localSize(parameters.parallel.localSize) {
 
+	if(parameters.geometry.dim ==3){
+	  leftViscosityFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
+	  rightViscosityFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
 
-  leftViscosityFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
-  rightViscosityFillBuffer = new FLOAT[(localSize[1]+3) * (localSize[2]+3)];
+	  bottomViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
+	  topViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
 
-  bottomViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
-  topViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[2]+3)];
+	  frontViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+	  backViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+	}
 
-  frontViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
-  backViscosityFillBuffer = new FLOAT[(localSize[0]+3) * (localSize[1]+3)];
+	if(parameters.geometry.dim ==2){
+		leftViscosityFillBuffer = new FLOAT[(localSize[1]+3) ];
+		rightViscosityFillBuffer = new FLOAT[(localSize[1]+3) ];
+
+		bottomViscosityFillBuffer = new FLOAT[(localSize[0]+3) ];
+		topViscosityFillBuffer = new FLOAT[(localSize[0]+3) ];
+	}
 
 }
 
@@ -62,13 +71,17 @@ void ViscosityBufferFillStencil::applyBackWall ( FlowField & flowField, int i, i
 /*2D
  */
 void ViscosityBufferFillStencil::applyLeftWall ( FlowField & flowField, int i, int j) {
+	leftViscosityFillBuffer[j] = flowField.getViscosity().getScalar(i+2,j);
 }
 
 void ViscosityBufferFillStencil::applyRightWall ( FlowField & flowField, int i, int j) {
+	 rightViscosityFillBuffer[j] = flowField.getViscosity().getScalar(i-1,j);
 }
 
 void ViscosityBufferFillStencil::applyBottomWall ( FlowField & flowField, int i, int j) {
+	bottomViscosityFillBuffer[i] = flowField.getViscosity().getScalar(i,j+2);
 }
 
 void ViscosityBufferFillStencil::applyTopWall ( FlowField & flowField, int i, int j) {
+	topViscosityFillBuffer[i] = flowField.getViscosity().getScalar(i,j-1);
 }

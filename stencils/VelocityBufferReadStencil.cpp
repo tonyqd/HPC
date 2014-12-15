@@ -5,14 +5,24 @@ VelocityBufferReadStencil::VelocityBufferReadStencil( const Parameters & paramet
 
   int dim = parameters.geometry.dim;
 
-  leftVelocityReadBuffer = new FLOAT[(localSize[1] + 3) * (localSize[2] + 3) * 2*(dim)];
-  rightVelocityReadBuffer = new FLOAT[(localSize[1] + 3) * (localSize[2] + 3) * dim];
+  if(dim ==3){
+	  leftVelocityReadBuffer = new FLOAT[(localSize[1] + 3) * (localSize[2] + 3) * 2*(dim)];
+	  rightVelocityReadBuffer = new FLOAT[(localSize[1] + 3) * (localSize[2] + 3) * dim];
 
-  bottomVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[2] + 3) * 2*(dim)];
-  topVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[2] + 3) * dim];
+	  bottomVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[2] + 3) * 2*(dim)];
+	  topVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[2] + 3) * dim];
 
-  frontVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[1] + 3) * 2*(dim)];
-  backVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[1] + 3) * dim];
+	  frontVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[1] + 3) * 2*(dim)];
+	  backVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * (localSize[1] + 3) * dim];
+  }
+
+  if(dim ==2){
+	  leftVelocityReadBuffer = new FLOAT[(localSize[1] + 3) * 2*(dim)];
+	  rightVelocityReadBuffer = new FLOAT[(localSize[1] + 3)  * dim];
+
+	  bottomVelocityReadBuffer = new FLOAT[(localSize[0] + 3) * 2*(dim)];
+	  topVelocityReadBuffer = new FLOAT[(localSize[0] + 3) *  dim];
+  }
 
 }
 
@@ -97,13 +107,33 @@ void VelocityBufferReadStencil::applyBackWall ( FlowField & flowField, int i, in
 /*2D
  */
 void VelocityBufferReadStencil::applyLeftWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.leftNb >= 0){
+		flowField.getVelocity().getVector(i, j)[0] = leftVelocityReadBuffer[0 +4*j];
+		flowField.getVelocity().getVector(i, j)[1] = leftVelocityReadBuffer[1 + 4*j];
+		flowField.getVelocity().getVector(i+1,j)[0] = leftVelocityReadBuffer[2 + 4*j];
+		flowField.getVelocity().getVector(i+1,j)[1] = leftVelocityReadBuffer[3 + 4*j];
+		}
 }
 
 void VelocityBufferReadStencil::applyRightWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.rightNb >= 0){
+		flowField.getVelocity().getVector(i, j)[0] = rightVelocityReadBuffer[0 + 2*j];
+		flowField.getVelocity().getVector(i, j)[1] = rightVelocityReadBuffer[1 + 2*j];
+		}
 }
 
 void VelocityBufferReadStencil::applyBottomWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.bottomNb >= 0){
+		flowField.getVelocity().getVector(i, j)[0] = bottomVelocityReadBuffer[0 + 4*i];
+		flowField.getVelocity().getVector(i, j)[1] = bottomVelocityReadBuffer[1 + 4*i];
+		flowField.getVelocity().getVector(i,j+1)[0] = bottomVelocityReadBuffer[2 + 4*i];
+		flowField.getVelocity().getVector(i,j+1)[1] = bottomVelocityReadBuffer[3 + 4*i];
+		}
 }
 
 void VelocityBufferReadStencil::applyTopWall ( FlowField & flowField, int i, int j) {
+	if( _parameters.parallel.topNb >= 0){
+		flowField.getVelocity().getVector(i, j)[0] = topVelocityReadBuffer[0 + 2*i];
+		flowField.getVelocity().getVector(i, j)[1] = topVelocityReadBuffer[1 + 2*i];
+		}
 }
