@@ -11,14 +11,15 @@ void FGHStencilTurbulent::apply ( FlowField & flowField,  int i, int j ){
 
     loadLocalVelocity2D(  flowField, _localVelocity, i, j);
     loadLocalMeshsize2D(_parameters, _localMeshsize, i, j);
+    loadLocalViscosity2D( flowField, _localViscosity, i, j);
 
     FLOAT* const values = flowField.getFGH().getVector(i,j);
 
     // Now the localVelocity array should contain lexicographically ordered elements around the
     // given index
 
-    values [0] = computeF2D(_localVelocity, _localMeshsize, _parameters, _parameters.timestep.dt);
-    values [1] = computeG2D(_localVelocity, _localMeshsize, _parameters, _parameters.timestep.dt);
+    values [0] = computeF2D(_localVelocity, _localMeshsize, _localViscosity, _parameters, _parameters.timestep.dt);
+    values [1] = computeG2D(_localVelocity, _localMeshsize, _localViscosity, _parameters, _parameters.timestep.dt);
 
 }
 

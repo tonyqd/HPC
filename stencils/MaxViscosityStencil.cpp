@@ -11,17 +11,14 @@ MaxViscosityStencil::MaxViscosityStencil (const Parameters & parameters) :
 void MaxViscosityStencil::apply (FlowField & flowField, int i, int j){
 	if (flowField.getViscosity().getScalar(i,j) > _maxViscosity){
 		_maxViscosity = flowField.getViscosity().getScalar(i,j);
-
 	}
 }
 
 void MaxViscosityStencil::apply (FlowField & flowField, int i, int j, int k){
 	if (flowField.getViscosity().getScalar(i,j,k) > _maxViscosity){
 	        _maxViscosity = flowField.getViscosity().getScalar(i,j,k);
-
 	}
 }
-
 
 
 void MaxViscosityStencil::reset () {
@@ -29,6 +26,6 @@ void MaxViscosityStencil::reset () {
 
 }
 
-const FLOAT MaxViscosityStencil::getMaxValues() const{
+FLOAT MaxViscosityStencil::getMaxValues() const{
 	return _maxViscosity;
 }

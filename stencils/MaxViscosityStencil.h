@@ -31,7 +31,7 @@ class MaxViscosityStencil : public FieldStencil<FlowField> {
          */
         void reset ();
 
-        const FLOAT getMaxValues() const;
+        FLOAT getMaxValues() const;
 };
 
 #endif
