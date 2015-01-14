@@ -31,14 +31,13 @@ inline void loadLocalVelocity3D(FlowField & flowField, FLOAT * const localVeloci
 }
 
 inline void loadLocalViscosity2D(FlowField & flowField, FLOAT * const localViscosity, int i, int j){
-    for ( int layer = -1; layer <= 1; layer ++ ){
+
         for ( int row = -1; row <= 1; row++ ){
             for ( int column = -1; column <= 1; column ++ ){
-            	localViscosity[39 + 27*layer + 9*row + 3*column] = flowField.getViscosity().getScalar(i + column, j + row);
+            	localViscosity[39 + 9*row + 3*column] = flowField.getViscosity().getScalar(i + column, j + row);
 
 	    }
 	}
-    }
 }
 
 // Load the local viscosity cube with surrounding viscosities
@@ -120,7 +119,7 @@ inline FLOAT dwdz ( const FLOAT * const lv, const FLOAT * const lm ) {
     return tmp2;*/
 }
 
-// first derivative of u-component w.r.t. y-direction, evaltuated at the mid of the cell
+// first derivative of u-component w.r.t. y-direction, evaluated at the mid of the cell
 inline FLOAT dudy ( const FLOAT * const lv, const FLOAT * const lm ) {
     const FLOAT hyShort = 0.5*lm[mapd( 0,0,0,1)];                       // distance of corner points in x-direction from center v-value
     const FLOAT hyLong0 = 0.5*(lm[mapd(0,0,0,1)] + lm[mapd( 0,-1,0,1)]); // distance between center and west v-value
@@ -146,7 +145,7 @@ inline FLOAT dudy ( const FLOAT * const lv, const FLOAT * const lm ) {
     return (u0-uM1)/(2.0*hyShort);
 }
 
-// first derivative of v-component w.r.t. x-drection, evaltuated at the mid of the cell
+// first derivative of v-component w.r.t. x-direction, evaluated at the mid of the cell
 inline FLOAT dvdx ( const FLOAT * const lv, const FLOAT * const lm ) {
 	const FLOAT hxShort = 0.5*lm[mapd( 0,0,0,0)];                       // distance of corner points in x-direction from center v-value
 	const FLOAT hxLong0 = 0.5*(lm[mapd(0,0,0,0)] + lm[mapd(-1,0,0,0)]); // distance between center and west v-value
