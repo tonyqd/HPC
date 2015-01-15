@@ -431,12 +431,8 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
 
                 readFloatMandatory(parameters.turbulent.kappa, node, "kappa");
 
-                subNode = node->FirstChildElement("model");
-                if (subNode != NULL){
-                    readStringMandatory(parameters.turbulent.model, subNode);
-                } else {
-                    handleError (1, "Missing type in simulation parameters");
-                }
+                readFloatMandatory(parameters.turbulent.model, node, "model");
+
     }
 
     // Broadcasting of the values
@@ -496,5 +492,6 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
 
     // TODO WS2: broadcast turbulence parameters
     MPI_Bcast(&(parameters.turbulent.kappa),   1, MY_MPI_FLOAT, 0, communicator);
+    MPI_Bcast(&(parameters.turbulent.model),   1, MY_MPI_FLOAT, 0, communicator);
 
 }

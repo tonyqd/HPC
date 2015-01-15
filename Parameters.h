@@ -135,7 +135,7 @@ class BFStepParameters{
 class TurbulentParameters{
 	public:
 		FLOAT kappa;		//
-		std::string model;			//model type: standard, laminar, turbulent
+		FLOAT model;			//model type: standard = 1 , laminar = 2, turbulent = 3
 };
 
 

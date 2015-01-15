@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-    <flow Re="100"/>
-    <simulation finalTime="3.0">
+    <flow Re="1000"/>
+    <simulation finalTime="5.0">
         <type>turbulence</type>
         <scenario>channel</scenario>
     </simulation>
-    <turbulent kappa="0.51">
-        <model>standard</model>  <!--default,standard,laminar,turbulent-->
-    </turbulent>
-    <backwardFacingStep xRatio="0.3" yRatio="0.3"/>
+    <turbulent kappa="0.41" model="1"/> <!--default,standard=1,laminar=2,turbulent=3-->
+    <backwardFacingStep xRatio="0.0" yRatio="0.0"/>
     <timestep dt="1" tau="0.5"/>
     <solver gamma="0.5"/>
-    <geometry dim="3" 
+    <geometry dim="2" 
     lengthX="5.0" lengthY="1.0" lengthZ="1.0" 
     sizeX="10" sizeY="20" sizeZ="10" 
     stretchX="false" stretchY="true" stretchZ="true">
