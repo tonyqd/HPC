@@ -111,9 +111,6 @@ class TurbulentSimulation : public Simulation  {
     }
 
     virtual void solveTimestep(){
-        // determine and set max. timestep which is allowed in this simulation
-        //setTimeStep();  //time steping does work, but time steps are very small
-        _parameters.timestep.dt = 0.0001;
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
         //if(_parameters.parallel.rank==1){
@@ -144,6 +141,8 @@ class TurbulentSimulation : public Simulation  {
         _petscParallelManager.communicateVelocities();
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
+
+        setTimeStep();
 
 
     }
