@@ -111,10 +111,9 @@ class TurbulentSimulation : public Simulation  {
     }
 
     virtual void solveTimestep(){
-        // determine and set max. timestep which is allowed in this simulation
-        //setTimeStep();  //time steping does work, but time steps are very small
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
+        setTimeStep();
         //if(_parameters.parallel.rank==1){
         //_flowField.getViscosity().show();}
         // compute Turbulent fgh
@@ -127,16 +126,7 @@ class TurbulentSimulation : public Simulation  {
         _solver.solve();
         // TODO WS2: communicate pressure values
         _petscParallelManager.communicatePressure();
- /*int i=0; int j = 0;int k =0;
-        for (k =0; k < _parameters.parallel.localSize[0] +3; k++ ){
-        	for(j =0; j < _parameters.parallel.localSize[0] +3; j++){
-        		for(i =0; i < _parameters.parallel.localSize[0]+3; i++){
-        			printf("processor %d i %d j %d k %d = %f \n", _parameters.parallel.rank ,i,j,k,_flowField.getPressure().getScalar(i,j,k));
-        		}
-        	}
-        }*/
         //_flowField.getFGH().show();
-
         // compute velocity
         _velocityIterator.iterate();
         // TODO WS2: communicate velocity values
@@ -144,7 +134,7 @@ class TurbulentSimulation : public Simulation  {
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
 
-	setTimeStep();
+	//setTimeStep();
     }
 
     /** TODO WS1: plots the flow field. */
