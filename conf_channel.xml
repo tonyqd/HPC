@@ -5,14 +5,14 @@
         <type>turbulence</type>
         <scenario>channel</scenario>
     </simulation>
-    <turbulent kappa="0.41" model="1"/> <!--default,standard=1,laminar=2,turbulent=3-->
+    <turbulent kappa="0.41" model="0"/> <!--default,standard=1,laminar=2,turbulent=3-->
     <backwardFacingStep xRatio="0.0" yRatio="0.0"/>
     <timestep dt="1" tau="0.5"/>
     <solver gamma="0.5"/>
     <geometry dim="3" 
     lengthX="5.0" lengthY="1.0" lengthZ="1.0" 
-    sizeX="10" sizeY="20" sizeZ="10" 
-    stretchX="false" stretchY="false" stretchZ="false">
+    sizeX="40" sizeY="40" sizeZ="20" 
+    stretchX="false" stretchY="true" stretchZ="true">
       <!--mesh>uniform</mesh-->
       <mesh>stretched</mesh>
     </geometry>

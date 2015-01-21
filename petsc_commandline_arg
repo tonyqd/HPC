@@ -5,12 +5,13 @@
 #-ksp_monitor
 
 #-ksp_type fgmres
+-ksp_type gmres
 
 ### factorization level for the ILU precond -- serial
 #-pc_factor_levels 2
 
 ### factorization level for ILU -- parallel
-#-sub_pc_factor_levels 2
+-sub_pc_factor_levels 10
 
 
 
@@ -19,8 +20,8 @@
 
 
 ### Tolerances of the petsc solver
--ksp_atol 1e-8
--ksp_rtol 1e-11
+#-ksp_atol 1e-8
+#-ksp_rtol 1e-11
 
 ### maximum number of iterations
--ksp_max_it 100000
+-ksp_max_it 1000
