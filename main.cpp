@@ -32,8 +32,9 @@ int main (int argc, char *argv[]) {
     FlowField *flowField = NULL;
     TurbulentSimulation *turbulentsimulation = NULL;
     Simulation *simulation = NULL;
-
     
+    //int loadingCheckpoint = 0;
+
     #ifdef DEBUG
     std::cout << "Processor " << parameters.parallel.rank << " with index ";
     std::cout << parameters.parallel.indices[0] << ",";
@@ -72,12 +73,20 @@ int main (int argc, char *argv[]) {
     //flowField->getFlags().show();
 
     FLOAT time = 0.0;
+    FLOAT timeCheckpointOut=parameters.checkpoint.interval;
     FLOAT timeStdOut=parameters.stdOut.interval;
     FLOAT timeVTKOut=parameters.vtk.interval;
     int timeSteps = 0;
 
+    //if (loadingCheckpoint == 1) {
+    if ( parameters.checkpoint.restart == 1 ) {
+    	simulation->loadCheckpoint();
+    }
+
     // TODO WS1: plot initial state
     simulation->plotVTK(timeSteps);
+
+
     // time loop
     while (time < parameters.simulation.finalTime){
 
@@ -94,12 +103,18 @@ int main (int argc, char *argv[]) {
       // TODO WS1: trigger VTK output
       if (timeVTKOut <= time){
 	simulation->plotVTK(timeSteps);
-	
+        if (timeCheckpointOut <= time){
+            simulation->saveCheckpoint();
+        }
+        timeCheckpointOut += parameters.checkpoint.interval;
 	timeVTKOut += parameters.vtk.interval;
       }
       
       
        timeSteps++;
+
+
+
     }
 
     // TODO WS1: plot final output
@@ -116,9 +131,14 @@ int main (int argc, char *argv[]) {
         //flowField->getFlags().show();
 
         FLOAT time = 0.0;
+        FLOAT timeCheckpointOut=parameters.checkpoint.interval;
         FLOAT timeStdOut=parameters.stdOut.interval;
         FLOAT timeVTKOut=parameters.vtk.interval;
         int timeSteps = 0;
+
+        if ( parameters.checkpoint.restart == 1 ) {
+        	turbulentsimulation->loadCheckpoint();
+        }
 
         // TODO WS1: plot initial state
         turbulentsimulation->plotVTK(timeSteps);
@@ -137,12 +157,13 @@ int main (int argc, char *argv[]) {
           }
           // TODO WS1: trigger VTK output
           if (timeVTKOut <= time){
-    	turbulentsimulation->plotVTK(timeSteps);
-
-    	timeVTKOut += parameters.vtk.interval;
+              turbulentsimulation->plotVTK(timeSteps);
+    	      timeVTKOut += parameters.vtk.interval;
           }
-
-
+          if ( timeCheckpointOut <= time ){
+              turbulentsimulation->saveCheckpoint();
+              timeCheckpointOut += parameters.checkpoint.interval;
+	  }
            timeSteps++;
         }
 

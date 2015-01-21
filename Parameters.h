@@ -91,6 +91,12 @@ class WallParameters{
         BoundaryType typeBack;
 };
 
+class CheckpointParameters{
+    public:
+        FLOAT interval;     //! Time interval for file printing
+        int restart;        //! true / false
+};
+
 class VTKParameters{
     public:
         FLOAT interval;     //! Time interval for file printing
@@ -155,6 +161,7 @@ class Parameters {
         SolverParameters        solver;
         GeometricParameters     geometry;
         WallParameters          walls;
+	CheckpointParameters    checkpoint;
         VTKParameters           vtk;
         ParallelParameters      parallel;
         StdOutParameters        stdOut;

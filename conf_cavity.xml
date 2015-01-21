@@ -5,9 +5,7 @@
         <type>dns</type>
         <scenario>cavity</scenario>
     </simulation>
-    <turbulent kappa="0.51">
-        <model>dns</model>  <!--standard,laminar,turbulent-->
-    </turbulent>
+    <turbulent kappa="0.41" model="1"/> <!--default,standard=1,laminar=2,turbulent=3-->
     <timestep dt="1" tau="0.5"/>
     <solver gamma="0.5"/>
     <geometry dim="3" lengthX="1.0" lengthY="1.0" lengthZ="1.0" sizeX="10" sizeY="10" sizeZ="10">
@@ -34,6 +32,7 @@
             <vector x="0" y="0" z="0"/>
         </back>
     </walls>
+    <checkpoint interval="0.1" restart="false"/>
     <vtk interval="0.01">cavity_result</vtk>
     <stdOut interval="0.01"/>
     <parallel numProcessorsX="1" numProcessorsY="1" numProcessorsZ="1"/>

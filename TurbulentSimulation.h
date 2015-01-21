@@ -111,6 +111,8 @@ class TurbulentSimulation : public Simulation  {
     }
 
     virtual void solveTimestep(){
+        // determine and set max. timestep which is allowed in this simulation
+        //setTimeStep();  //time steping does work, but time steps are very small
         // compute TurbulentViscosity
         _turbulentViscosityIterator.iterate();
         //if(_parameters.parallel.rank==1){
@@ -142,9 +144,7 @@ class TurbulentSimulation : public Simulation  {
         // Iterate for velocities on the boundary
         _wallVelocityIterator.iterate();
 
-        setTimeStep();
-
-
+	setTimeStep();
     }
 
     /** TODO WS1: plots the flow field. */

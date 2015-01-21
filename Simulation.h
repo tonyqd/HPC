@@ -16,12 +16,15 @@
 #include "stencils/BFInputStencils.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
 #include "parallelManagers/PetscParallelManager.h"
+#include "parallelManagers/CheckpointManager.h"
 #include "stencils/PressureBufferFillStencil.h"
 #include "stencils/PressureBufferReadStencil.h"
 #include "stencils/VelocityBufferFillStencil.h"
 #include "stencils/VelocityBufferReadStencil.h"
 #include "stencils/ViscosityBufferFillStencil.h"
 #include "stencils/ViscosityBufferReadStencil.h"
+#include "stencils/CheckpointWriteStencil.h"
+#include "stencils/CheckpointReadStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "Iterators.h"
 #include "Definitions.h"
@@ -61,7 +64,12 @@ class Simulation {
     ParallelBoundaryIterator<FlowField> _parallelVelocityReadBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelViscosityFillBoundaryIterator;
     ParallelBoundaryIterator<FlowField> _parallelViscosityReadBoundaryIterator;
+    CheckpointWriteStencil _checkpointWriteStencil;
+    FieldIterator<FlowField> _checkpointWriteIterator;
+    CheckpointReadStencil _checkpointReadStencil;
+    FieldIterator<FlowField> _checkpointReadIterator;
     PetscParallelManager<FlowField> _petscParallelManager;
+    CheckpointManager<FlowField> _checkpointManager;
     FGHStencil _fghStencil;
     FieldIterator<FlowField> _fghIterator;
 
@@ -99,9 +107,14 @@ class Simulation {
 		_parallelVelocityReadBoundaryIterator(_flowField, parameters, _velocityBufferReadStencil, 0, 0),
 		_parallelViscosityFillBoundaryIterator(_flowField, parameters, _viscosityBufferFillStencil, 0, 0),
 		_parallelViscosityReadBoundaryIterator(_flowField, parameters, _viscosityBufferReadStencil, 0, 0),
+            _checkpointWriteStencil(parameters),
+	    _checkpointWriteIterator(_flowField, parameters, _checkpointWriteStencil, -1, 1),
+	    _checkpointReadStencil(parameters ),
+	    _checkpointReadIterator(_flowField, parameters, _checkpointReadStencil, -1, 1),
 		_petscParallelManager(parameters, _pressureBufferFillStencil, _pressureBufferReadStencil, _parallelPressureFillBoundaryIterator, _parallelPressureReadBoundaryIterator,
 				_velocityBufferFillStencil, _velocityBufferReadStencil, _parallelVelocityFillBoundaryIterator, _parallelVelocityReadBoundaryIterator,
 				_viscosityBufferFillStencil, _viscosityBufferReadStencil, _parallelViscosityFillBoundaryIterator, _parallelViscosityReadBoundaryIterator),
+		_checkpointManager(_flowField, parameters, _checkpointWriteStencil, _checkpointWriteIterator, _checkpointReadStencil, _checkpointReadIterator),
        _fghStencil(parameters),
        _fghIterator(_flowField,parameters,_fghStencil),
        _rhsStencil(parameters),
@@ -195,6 +208,13 @@ class Simulation {
       //           over _flowField and write flow field information to vtk file
     }
 
+    virtual void saveCheckpoint(){
+      _checkpointManager.writeMultFiles();
+    }
+
+    virtual void loadCheckpoint(){
+      _checkpointManager.readMultFiles();
+    }
   protected:
     /** sets the time step*/
     virtual void setTimeStep(){

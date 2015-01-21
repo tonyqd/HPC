@@ -290,6 +290,21 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         }
 
         //--------------------------------------------------
+        // Checkpointing parameters
+        //--------------------------------------------------
+
+        node = confFile.FirstChildElement()->FirstChildElement("checkpoint");
+
+        if (node == NULL){
+            handleError(1, "Error loading checkpointing parameters");
+        }
+
+        readFloatOptional(parameters.checkpoint.interval, node, "interval");
+        bool buffer=false;
+        readBoolMandatory(buffer, node,"restart");
+        parameters.checkpoint.restart = (int) buffer;
+
+        //--------------------------------------------------
         // VTK parameters
         //--------------------------------------------------
 
@@ -463,6 +478,9 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
     MPI_Bcast(&(parameters.environment.gz), 1, MY_MPI_FLOAT, 0, communicator);
 
     MPI_Bcast(&(parameters.simulation.finalTime), 1, MY_MPI_FLOAT, 0, communicator);
+    
+    MPI_Bcast(&(parameters.checkpoint.interval), 1, MY_MPI_FLOAT, 0, communicator);
+    MPI_Bcast(&(parameters.checkpoint.restart), 1, MPI_INT, 0, communicator);
 
     MPI_Bcast(&(parameters.vtk.interval), 1, MY_MPI_FLOAT, 0, communicator);
     MPI_Bcast(&(parameters.stdOut.interval), 1, MPI_INT, 0, communicator);
